@@ -246,6 +246,7 @@ class GoProController:
                 # attempt to contact the camera
                 try:
                     response = urlopen(url, timeout=1).read().encode("hex")
+                    status[cmd] = response # save raw response
                     
                     # loop through different parts that we know how to translate
                     for item in self.statusMatrix[cmd]:
