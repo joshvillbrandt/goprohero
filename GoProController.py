@@ -128,9 +128,9 @@ class GoProController:
         "record": "?",
         "res": "?",
         "fps": "?",
-        "fov": "?"
+        "fov": "?",
+        "raw": {}
     }
-    password = ""
     currentSSID = None
     bus = None
     manager = None
@@ -166,87 +166,103 @@ class GoProController:
             time.sleep(10)
     
     def connect(self, ssid, password):
-        # Identify our access point. We do this by comparing our desired SSID
-        # to the SSID reported by the AP.
-        ap_list = self.device.GetAccessPoints()
-        ap_path = None
-        for path in ap_list:
-            ap_props = dbus.Interface(self.bus.get_object("org.freedesktop.NetworkManager", path),
-                "org.freedesktop.DBus.Properties")
-            ap_ssid = ap_props.Get("org.freedesktop.NetworkManager.AccessPoint", "Ssid")
-            
-            # Returned SSID is a list of ASCII values. Let's convert it to a proper
-            # string.
-            ap_ssid_str = "".join(chr(i) for i in ap_ssid)
-            if ap_ssid_str == ssid:
-                ap_path = path
-                break
+        # skip the connect process if we are already on this network
+        if ssid == self.currentSSID:
+            # TODO: do a more comprehensive check - this could have changed and we don't know about it
+            return True
+        else:
+            try:
+                # not to self: a new camera won't be seen for at least 10 seconds
+                
+                # Identify our access point. We do this by comparing our desired SSID
+                # to the SSID reported by the AP.
+                ap_list = self.device.GetAccessPoints()
+                ap_path = None
+                for path in ap_list:
+                    ap_props = dbus.Interface(self.bus.get_object("org.freedesktop.NetworkManager", path),
+                        "org.freedesktop.DBus.Properties")
+                    ap_ssid = ap_props.Get("org.freedesktop.NetworkManager.AccessPoint", "Ssid")
+                    
+                    # Returned SSID is a list of ASCII values. Let's convert it to a proper
+                    # string.
+                    ap_ssid_str = "".join(chr(i) for i in ap_ssid)
+                    if ap_ssid_str == ssid:
+                        ap_path = path
+                        break
+                
+                # attempt a connection
+                if ap_path:
+                    # At this point we have all the data we need. Let's prepare our connection
+                    # parameters so that we can tell the NetworkManager what is the passphrase.
+                    connection_params = {
+                        "802-11-wireless": {
+                            "security": "802-11-wireless-security",
+                        },
+                        "802-11-wireless-security": {
+                            "key-mgmt": "wpa-psk",
+                            "psk": password
+                        },
+                    }
         
-        # attempt a connection
-        if ap_path:
-            # At this point we have all the data we need. Let's prepare our connection
-            # parameters so that we can tell the NetworkManager what is the passphrase.
-            connection_params = {
-                "802-11-wireless": {
-                    "security": "802-11-wireless-security",
-                },
-                "802-11-wireless-security": {
-                    "key-mgmt": "wpa-psk",
-                    "psk": password
-                },
-            }
-
-            # Establish the connection.
-            self.currentSSID = None
-            self.password = None
-            settings_path, connection_path = self.manager.AddAndActivateConnection(
-                connection_params, self.device_path, ap_path)
-            #print "settings_path =", settings_path
-            #print "connection_path =", connection_path
+                    # Establish the connection.
+                    self.currentSSID = None
+                    settings_path, connection_path = self.manager.AddAndActivateConnection(
+                        connection_params, self.device_path, ap_path)
+                    # unfortunately this adds a new "connection" every time! lame...
+                    # would like to prevent "auto connect" so that it doesn't prompt me when the camera is not there
+                    #print "settings_path =", settings_path
+                    #print "connection_path =", connection_path
+                
+                    # Wait until connection is established. This may take a few seconds.
+                    #print """Waiting for connection to reach """ \"""NM_ACTIVE_CONNECTION_STATE_ACTIVATED state ..."""
+                    connection_props = dbus.Interface(
+                        self.bus.get_object("org.freedesktop.NetworkManager", connection_path),
+                        "org.freedesktop.DBus.Properties")
+                    start = time.time()
+                    while time.time()-start < self.networkTimeout:
+                        # Loop forever until desired state is detected.
+                        #
+                        # A timeout should be implemented here, otherwise the program will
+                        # get stuck if connection fails.
+                        #
+                        # IF PASSWORD IS BAD, NETWORK MANAGER WILL DISPLAY A QUERY DIALOG!
+                        # This is something that should be avoided, but I don't know how, yet.
+                        #
+                        # Also, if connection is disconnected at this point, the Get()
+                        # method will raise an org.freedesktop.DBus.Error.UnknownMethod
+                        # exception. This should also be anticipated.
+                        state = connection_props.Get(
+                            "org.freedesktop.NetworkManager.Connection.Active", "State")
+                        if state == 2: #NM_ACTIVE_CONNECTION_STATE_ACTIVATED
+                            # Connection established!
+                            self.currentSSID = ssid
+                            return True
+                        time.sleep(0.01)
+            except:
+                pass
         
-            # Wait until connection is established. This may take a few seconds.
-            #print """Waiting for connection to reach """ \"""NM_ACTIVE_CONNECTION_STATE_ACTIVATED state ..."""
-            connection_props = dbus.Interface(
-                self.bus.get_object("org.freedesktop.NetworkManager", connection_path),
-                "org.freedesktop.DBus.Properties")
-            start = time.time()
-            while time.time()-start < self.networkTimeout:
-                # Loop forever until desired state is detected.
-                #
-                # A timeout should be implemented here, otherwise the program will
-                # get stuck if connection fails.
-                #
-                # IF PASSWORD IS BAD, NETWORK MANAGER WILL DISPLAY A QUERY DIALOG!
-                # This is something that should be avoided, but I don't know how, yet.
-                #
-                # Also, if connection is disconnected at this point, the Get()
-                # method will raise an org.freedesktop.DBus.Error.UnknownMethod
-                # exception. This should also be anticipated.
-                state = connection_props.Get(
-                    "org.freedesktop.NetworkManager.Connection.Active", "State")
-                if state == 2: #NM_ACTIVE_CONNECTION_STATE_ACTIVATED
-                    # Connection established!
-                    self.currentSSID = ssid
-                    self.password = password
-                    return True
-                time.sleep(0.01)
+        # catchll return
         return False
     
-    def getStatus(self):
+    def getStatus(self, ssid, password):
         status = self.statusTemplate.copy()
         camActive = True
+        
+        # attempt to connect to the correct camera
+        if not self.connect(ssid, password):
+            camActive = False
         
         # loop through different status URLs
         for cmd in self.statusMatrix:
             
             # stop sending requests if a previous request failed
             if camActive:
-                url = self.statusURL.replace("CMD", cmd).replace("PWD", self.password)
+                url = self.statusURL.replace("CMD", cmd).replace("PWD", password)
                 
                 # attempt to contact the camera
                 try:
                     response = urlopen(url, timeout=1).read().encode("hex")
-                    status[cmd] = response # save raw response
+                    status['raw'][cmd] = response # save raw response
                     
                     # loop through different parts that we know how to translate
                     for item in self.statusMatrix[cmd]:
@@ -274,41 +290,23 @@ class GoProController:
         
         return status
     
-    def getRawStatus(self):
-        status = {}
-        camActive = True
-        
-        # loop through different status URLs
-        for cmd in self.statusMatrix:
-            
-            # stop sending requests if a previous request failed
-            if camActive:
-                url = self.statusURL.replace("CMD", cmd).replace("PWD", self.password)
+    def sendCommand(self, ssid, password, command):
+        if self.connect(ssid, password):
+            if command in self.commandMaxtrix:
+                args = self.commandMaxtrix[command]
+                url = self.commandURL.replace("CMD", args["cmd"]).replace("PWD",
+                    password).replace("VAL", args["val"])
                 
                 # attempt to contact the camera
                 try:
-                    status[cmd] = urlopen(url, timeout=1).read().encode("hex")
+                    response = urlopen(url, timeout=args["timeout"]).read()
+                    print "    " + url
+                    return True
                 except:
-                    camActive = False
-        
-        return status
-    
-    def sendCommand(self, command):
-        if command in self.commandMaxtrix:
-            args = self.commandMaxtrix[command]
-            url = self.commandURL.replace("CMD", args["cmd"]).replace("PWD",
-                self.password).replace("VAL", args["val"])
-            
-            # attempt to contact the camera
-            try:
-                return urlopen(url, timeout=args["timeout"]).read()
-            except:
-                return False
-            
-        else:
-            return False
+                    pass
+                
+        # catchall return statement
+        return False
     
     def test(self):
-        self.connect("abortcam1", "password")
-        status = self.getStatus()
-        print status
+        print self.getStatus("cam1", "password")
