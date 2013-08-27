@@ -15,8 +15,11 @@
 import dbus
 import time
 from urllib2 import *
+from inspect import isfunction
 
 class GoProController:
+    def _translateBatt(val):
+        return int(val, 16)
     statusURL = "http://10.5.5.9/CMD?t=PWD"
     commandURL = "http://10.5.5.9/CMD?t=PWD&p=%VAL"
     statusMatrix = {
@@ -33,7 +36,8 @@ class GoProController:
         "camera/se": {
             "batt": {
                 "a": 38,
-                "b": 40
+                "b": 40,
+                "translate": _translateBatt
             }
         },
         "camera/sx": {
@@ -122,13 +126,6 @@ class GoProController:
     }
     statusTemplate = {
         "summary": "notfound", # one of "notfound", "off", "on", or "recording"
-        "power": "?",
-        "batt": "?",
-        "mode": "?",
-        "record": "?",
-        "res": "?",
-        "fps": "?",
-        "fov": "?",
         "raw": {}
     }
     currentSSID = None
@@ -271,7 +268,9 @@ class GoProController:
                         
                         # translate the response value if we know how
                         if "translate" in args:
-                            if part in args["translate"]:
+                            if isfunction(args["translate"]):
+                                status[item] = args["translate"](part)
+                            elif part in args["translate"]:
                                 status[item] = args["translate"][part]
                             else:
                                 status[item] = "translate error (" + part + ")"
@@ -281,11 +280,11 @@ class GoProController:
                     camActive = False
         
         # build summary
-        if status["record"] == "on":
+        if "record" in status and status["record"] == "on":
             status["summary"] = "recording"
-        elif status["power"] == "on":
+        elif "power" in status and status["power"] == "on":
             status["summary"] = "on"
-        elif status["power"] == "off":
+        elif "power" in status and status["power"] == "off":
             status["summary"] = "off"
         
         return status
