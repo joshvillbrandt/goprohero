@@ -299,10 +299,12 @@ class GoProController:
                 # attempt to contact the camera
                 try:
                     response = urlopen(url, timeout=args["timeout"]).read()
-                    print "    " + url
                     return True
-                except:
-                    pass
+                except HTTPError, e:
+                    print "    HTTPError opening " + url + ": " + str(e.code)
+                except URLError, e:
+                    print "    URLError opening " + url + ": "
+                    print e.args
                 
         # catchall return statement
         return False
