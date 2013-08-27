@@ -18,15 +18,15 @@ from urllib2 import *
 from inspect import isfunction
 
 class GoProController:
-    def _translateBatt(val):
+    def _hexToDec(val):
         return int(val, 16)
     statusURL = "http://10.5.5.9/CMD?t=PWD"
     commandURL = "http://10.5.5.9/CMD?t=PWD&p=%VAL"
     statusMatrix = {
         "bacpac/se": {
             "power": {
-                "a": 30,
-                "b": 32,
+                "a": 18,
+                "b": 20,
                 "translate": {
                     "00": "off",
                     "01": "on"
@@ -34,13 +34,13 @@ class GoProController:
             }
         },
         "camera/se": {
-            "batt": {
+            "batt1": {
                 "a": 38,
                 "b": 40,
-                "translate": _translateBatt
+                "translate": _hexToDec
             }
         },
-        "camera/sx": {
+        "camera/sx": { # the first 62 bytes of sx are almost the same as se
             "mode": {
                 "a": 2,
                 "b": 4,
@@ -52,6 +52,56 @@ class GoProController:
                     "07": "settings"
                 }
             },
+            "fov": {
+                "a": 14,
+                "b": 16,
+                "translate": {
+                    "00": "170",
+                    "01": "127",
+                    "02": "90"
+                }
+            },
+            "secselapsed": {
+                "a": 26,
+                "b": 30,
+                "translate": _hexToDec
+            },
+            "orientation": {
+                "a": 37,
+                "b": 38,
+                "translate": {
+                    "0": "up",
+                    "4": "down"
+                }
+            },
+            "charging": {
+                "a": 39,
+                "b": 40,
+                "translate": {
+                    "3": "no",
+                    "4": "yes"
+                }
+            },
+            "mem": { # i really have no idea what this is
+                "a": 42,
+                "b": 46,
+                "translate": _hexToDec
+            },
+            "npics": {
+                "a": 46,
+                "b": 50,
+                "translate": _hexToDec
+            },
+            "minsremaining": {
+                "a": 50,
+                "b": 54,
+                "translate": _hexToDec
+            },
+            "nvids": {
+                "a": 54,
+                "b": 58,
+                "translate": _hexToDec
+            },
             "record": {
                 "a": 60,
                 "b": 62,
@@ -60,13 +110,24 @@ class GoProController:
                     "04": "off"
                 }
             },
-            "res": {
+            "batt2": {
+                "a": 90,
+                "b": 92,
+                "translate": _hexToDec
+            },
+            "videores": {
                 "a": 100,
                 "b": 102,
                 "translate": {
+                    "00": "WVGA",
                     "01": "720p",
                     "02": "960p",
-                    "03": "1080p"
+                    "03": "1080p",
+                    "04": "1440p",
+                    "05": "2.7K",
+                    "06": "2.7KCin",
+                    "07": "4K",
+                    "08": "4KCin"
                 }
             },
             "fps": {
@@ -84,15 +145,6 @@ class GoProController:
                     "08": "100",
                     "09": "120",
                     "10": "240"
-                }
-            },
-            "fov": {
-                "a": 14,
-                "b": 16,
-                "translate": {
-                    "00": "wide (170)",
-                    "01": "medium (127)",
-                    "02": "narrow (90)"
                 }
             }
         }

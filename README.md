@@ -11,3 +11,5 @@ This class can interfaces with GoPro cameras in their wifi ad-hoc mode (aka GoPr
 * look into the wifi_networks list that in the settings.in file that is present when updating GoPro firmware
 * revamp crappy wifi connect code
 * respond better to keyboard interrupts
+* use openCV to grab a frame from the live stream
+* still some information in the status byte streams i haven't translated... I don't really need the rest though
