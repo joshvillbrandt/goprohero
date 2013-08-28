@@ -16,3 +16,5 @@ GoProController can also take snapshots from the camera's live stream. OpenCV is
 * revamp crappy wifi connect code
 * respond better to keyboard interrupts
 * still some information in the status byte streams i haven't translated... I don't really need the rest though
+* openCV functions can get a segfault if the wifi connection is spotty - that stucks
+* GoPro 3 wifi sometimes shuts off when charging via USB even though the wifi LED is still flashing
