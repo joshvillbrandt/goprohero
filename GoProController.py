@@ -184,6 +184,11 @@ class GoProController:
             "cmd": "camera/CM",
             "val": "00",
             "timeout": 0.1
+        },
+        "mode_still": {
+            "cmd": "camera/CM",
+            "val": "01",
+            "timeout": 0.1
         }
     }
     statusTemplate = {
