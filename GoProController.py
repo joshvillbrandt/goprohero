@@ -6,6 +6,7 @@
 # Based off of work by Blair Gagnon
 # ugly wifi code by ZalewaPL: http://stackoverflow.com/questions/15005240/
 #    connecting-to-a-protected-wifi-from-python-on-linux
+# more commands here: http://ubuntuone.com/5G2W2LtiQEsXW75uxu2dPl
 
 # Usage:
 # from GoProController import GoProController
@@ -16,10 +17,15 @@ import dbus
 import time
 from urllib2 import *
 from inspect import isfunction
+import cv2
+import Image
+import StringIO
+import base64
 
 class GoProController:
     def _hexToDec(val):
         return int(val, 16)
+    previewURL = "http://10.5.5.9:8080/live/amba.m3u8"
     statusURL = "http://10.5.5.9/CMD?t=PWD"
     commandURL = "http://10.5.5.9/CMD?t=PWD&p=%VAL"
     statusMatrix = {
@@ -355,6 +361,27 @@ class GoProController:
             status["summary"] = "off"
         
         return status
+    
+    def getImage(self, ssid, password):
+        if self.connect(ssid, password):
+            try:
+                # use OpenCV to capture a frame and store it in a numpy array
+                stream = cv2.VideoCapture(self.previewURL)
+                ret, numpyImage = stream.read()
+                
+                # use Image to save the image to a file, but actually save it to a string
+                image = Image.fromarray(numpyImage)
+                output = StringIO.StringIO()
+                image.save(output, format="PNG")
+                str = output.getvalue()
+                output.close()
+                
+                return "data:image/png;base64,"+base64.b64encode(str)
+            except:
+                pass
+                
+        # catchall return statement
+        return False
     
     def sendCommand(self, ssid, password, command):
         if self.connect(ssid, password):
