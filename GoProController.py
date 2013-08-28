@@ -61,6 +61,16 @@ class GoProController:
                     "02": "90"
                 }
             },
+            "picres": {
+                "a": 17,
+                "b": 18,
+                "translate": {
+                    "3": "5MP med",
+                    "6": "7MP med",
+                    "4": "7MP wide",
+                    "5": "12MP wide"
+                }
+            },
             "secselapsed": {
                 "a": 26,
                 "b": 30,
@@ -115,7 +125,7 @@ class GoProController:
                 "b": 92,
                 "translate": _hexToDec
             },
-            "videores": {
+            "vidres": {
                 "a": 100,
                 "b": 102,
                 "translate": {
