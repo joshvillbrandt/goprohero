@@ -1,11 +1,13 @@
 #!/usr/bin/python
 
 # GoProController.py
-# Josh Villbrandt <josh@javconcepts.com>
+# Josh Villbrandt <josh@javconcepts.com>, Blair Gagnon <blairgagnon@gmail.com>
 # 8/24/2013
-# Based off of work by Blair Gagnon
+# 
+# Reference URLs:
+# http://projects.gnome.org/NetworkManager/developers/
+# http://projects.gnome.org/NetworkManager/developers/settings-spec-08.html
 # ugly wifi code by ZalewaPL: http://stackoverflow.com/questions/15005240/
-#    connecting-to-a-protected-wifi-from-python-on-linux
 # more commands here: http://ubuntuone.com/5G2W2LtiQEsXW75uxu2dPl
 
 # Usage:
@@ -207,6 +209,8 @@ class GoProController:
     device_path = None
     device = None
     networkTimeout = 15 # seconds
+    connection_path = None
+    settings_path = None
     
     def __init__(self, device_name = "ra0"):
         self.bus = dbus.SystemBus()
@@ -242,7 +246,15 @@ class GoProController:
             return True
         else:
             try:
-                # not to self: a new camera won't be seen for at least 10 seconds
+                # disconnect from previous connection
+                if self.connection_path != None:
+                    manager.DeactivateConnection(self.connection_path)
+                    settings = dbus.Interface(
+                        bus.get_object("org.freedesktop.NetworkManager", self.settings_path),
+                        "org.freedesktop.NetworkManager.Settings.Connection")
+                    settings.Delete()
+
+                # note to self: a new camera won't be seen for at least 10 seconds
                 
                 # Identify our access point. We do this by comparing our desired SSID
                 # to the SSID reported by the AP.
@@ -276,7 +288,7 @@ class GoProController:
         
                     # Establish the connection.
                     self.currentSSID = None
-                    settings_path, connection_path = self.manager.AddAndActivateConnection(
+                    self.settings_path, self.connection_path = self.manager.AddAndActivateConnection(
                         connection_params, self.device_path, ap_path)
                     # unfortunately this adds a new "connection" every time! lame...
                     # would like to prevent "auto connect" so that it doesn't prompt me when the camera is not there
@@ -286,7 +298,7 @@ class GoProController:
                     # Wait until connection is established. This may take a few seconds.
                     #print """Waiting for connection to reach """ \"""NM_ACTIVE_CONNECTION_STATE_ACTIVATED state ..."""
                     connection_props = dbus.Interface(
-                        self.bus.get_object("org.freedesktop.NetworkManager", connection_path),
+                        self.bus.get_object("org.freedesktop.NetworkManager", self.connection_path),
                         "org.freedesktop.DBus.Properties")
                     start = time.time()
                     while time.time()-start < self.networkTimeout:
@@ -367,16 +379,17 @@ class GoProController:
             try:
                 # use OpenCV to capture a frame and store it in a numpy array
                 stream = cv2.VideoCapture(self.previewURL)
-                ret, numpyImage = stream.read()
+                success, numpyImage = stream.read()
                 
-                # use Image to save the image to a file, but actually save it to a string
-                image = Image.fromarray(numpyImage)
-                output = StringIO.StringIO()
-                image.save(output, format="PNG")
-                str = output.getvalue()
-                output.close()
-                
-                return "data:image/png;base64,"+base64.b64encode(str)
+                if success:
+                    # use Image to save the image to a file, but actually save it to a string
+                    image = Image.fromarray(numpyImage)
+                    output = StringIO.StringIO()
+                    image.save(output, format="PNG")
+                    str = output.getvalue()
+                    output.close()
+                    
+                    return "data:image/png;base64,"+base64.b64encode(str)
             except:
                 pass
                 
