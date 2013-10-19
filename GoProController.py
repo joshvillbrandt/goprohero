@@ -412,6 +412,8 @@ class GoProController:
                 except URLError, e:
                     print "    URLError opening " + url + ": "
                     print e.args
+                except:
+                    print "    unknown error opening " + url
                 
         # catchall return statement
         return False
