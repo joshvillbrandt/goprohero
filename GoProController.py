@@ -259,11 +259,13 @@ class GoProController:
             try:
                 # disconnect from previous connection
                 try:
-                    self.manager.DeactivateConnection(self.connection_path)
-                    settings = dbus.Interface(
-                        self.bus.get_object("org.freedesktop.NetworkManager", self.settings_path),
-                        "org.freedesktop.NetworkManager.Settings.Connection")
-                    settings.Delete()
+                    # we might be switching connections even if connection_path is not None
+                    if self.connection_path != None:
+                        self.manager.DeactivateConnection(self.connection_path)
+                        settings = dbus.Interface(
+                            self.bus.get_object("org.freedesktop.NetworkManager", self.settings_path),
+                            "org.freedesktop.NetworkManager.Settings.Connection")
+                        settings.Delete()
                 except:
                     pass
 
