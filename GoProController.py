@@ -23,6 +23,8 @@ import cv2
 import Image
 import StringIO
 import base64
+import logging
+import copy
 
 class GoProController:
     def _hexToDec(val):
@@ -212,7 +214,15 @@ class GoProController:
     connection_path = None
     settings_path = None
     
-    def __init__(self, device_name = "ra0"):
+    def __init__(self, device_name = "ra0", log_file = "controller.log", log_level = logging.INFO, log_format = '%(levelname)-7s %(asctime)s   %(message)s'):
+        # setup log
+        logging.basicConfig(filename=log_file, format=log_format, level=log_level)
+        console = logging.StreamHandler()
+        console.setLevel(log_level)
+        console.setFormatter(logging.Formatter(log_format))
+        logging.getLogger('').addHandler(console)
+
+        # set up wifi
         self.bus = dbus.SystemBus()
         #Obtain handles to manager objects.
         manager_bus_object = self.bus.get_object("org.freedesktop.NetworkManager",
@@ -245,14 +255,17 @@ class GoProController:
             # TODO: do a more comprehensive check - this could have changed and we don't know about it
             return True
         else:
+            logging.info('connect(%s) - attempting connection', ssid);
             try:
                 # disconnect from previous connection
-                if self.connection_path != None:
-                    manager.DeactivateConnection(self.connection_path)
+                try:
+                    self.manager.DeactivateConnection(self.connection_path)
                     settings = dbus.Interface(
-                        bus.get_object("org.freedesktop.NetworkManager", self.settings_path),
+                        self.bus.get_object("org.freedesktop.NetworkManager", self.settings_path),
                         "org.freedesktop.NetworkManager.Settings.Connection")
                     settings.Delete()
+                except:
+                    pass
 
                 # note to self: a new camera won't be seen for at least 10 seconds
                 
@@ -318,21 +331,24 @@ class GoProController:
                         if state == 2: #NM_ACTIVE_CONNECTION_STATE_ACTIVATED
                             # Connection established!
                             self.currentSSID = ssid
+                            logging.info('connect(%s) - connection success', ssid);
                             return True
                         time.sleep(0.01)
-            except:
-                pass
+            except Exception as e:
+                logging.warning('connect(%s) - connection failure %s %s', ssid, type(e), e.args);
         
         # catchll return
+        logging.warning('connect(%s) - connection failure', ssid);
         return False
     
     def getStatus(self, ssid, password):
-        status = self.statusTemplate.copy()
-        camActive = True
+        logging.info('getStatus(%s)', ssid);
+        status = copy.deepcopy(self.statusTemplate)
+        camActive = False
         
         # attempt to connect to the correct camera
-        if not self.connect(ssid, password):
-            camActive = False
+        if self.connect(ssid, password):
+            camActive = True
         
         # loop through different status URLs
         for cmd in self.statusMatrix:
@@ -372,9 +388,11 @@ class GoProController:
         elif "power" in status and status["power"] == "off":
             status["summary"] = "off"
         
+        logging.info('getStatus(%s) - result %s', ssid, status);
         return status
     
     def getImage(self, ssid, password):
+        logging.info('getImage(%s)', ssid);
         if self.connect(ssid, password):
             try:
                 # use OpenCV to capture a frame and store it in a numpy array
@@ -389,14 +407,17 @@ class GoProController:
                     str = output.getvalue()
                     output.close()
                     
+                    logging.info('getImage(%s) - success!', ssid)
                     return "data:image/png;base64,"+base64.b64encode(str)
             except:
                 pass
                 
         # catchall return statement
+        logging.warning('getImage(%s) - failure', ssid);
         return False
     
     def sendCommand(self, ssid, password, command):
+        logging.info('sendCommand(%s)', ssid, command);
         if self.connect(ssid, password):
             if command in self.commandMaxtrix:
                 args = self.commandMaxtrix[command]
@@ -406,12 +427,14 @@ class GoProController:
                 # attempt to contact the camera
                 try:
                     response = urlopen(url, timeout=args["timeout"]).read()
+                    logging.info('sendCommand(%s) - http success!', ssid);
                     return True
                 except HTTPError, e:
-                    print "    HTTPError opening " + url + ": " + str(e.code)
+                    logging.warning('sendCommand(%s) - HTTPError opening %s: %s', ssid, url, str(e.code))
                 except URLError, e:
-                    print "    URLError opening " + url + ": "
-                    print e.args
+                    logging.warning('sendCommand(%s) - URLError opening %s: %s', ssid, url, e.args)
+                else:
+                    logging.warning('sendCommand(%s) - other error opening %s', ssid, url)
                 
         # catchall return statement
         return False
