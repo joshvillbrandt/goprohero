@@ -417,7 +417,7 @@ class GoProController:
         return False
     
     def sendCommand(self, ssid, password, command):
-        logging.info('sendCommand(%s)', ssid, command);
+        logging.info('sendCommand(%s) - %s', ssid, command);
         if self.connect(ssid, password):
             if command in self.commandMaxtrix:
                 args = self.commandMaxtrix[command]
