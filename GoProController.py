@@ -434,16 +434,9 @@ class GoProController:
                 except HTTPError, e:
                     logging.warning('sendCommand(%s) - HTTPError opening %s: %s', ssid, url, str(e.code))
                 except URLError, e:
-<<<<<<< HEAD
                     logging.warning('sendCommand(%s) - URLError opening %s: %s', ssid, url, e.args)
                 else:
                     logging.warning('sendCommand(%s) - other error opening %s', ssid, url)
-=======
-                    print "    URLError opening " + url + ": "
-                    print e.args
-                except:
-                    print "    unknown error opening " + url
->>>>>>> 79189bcbaa8ff68aed22398cc69211c0e698a6e0
                 
         # catchall return statement
         return False
