@@ -4,6 +4,8 @@ A lightweight Python class for interfacing with multiple GoPros.
 
 ## Description
 
+Warning: The HEAD commit is unstable right now. Please use the v0.1.1 tag.
+
 This class can interfaces with GoPro cameras in their wifi ad-hoc mode (aka GoPro iOS App mode.) When used with multiple cameras, the class will automatically jump between networks. GoProController can also take snapshots from the camera's live stream. OpenCV is used to open the stream and save a single frame.
 
 ## Background

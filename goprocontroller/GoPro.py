@@ -27,7 +27,7 @@ class GoPro:
         return 'http://{}/{}?t={}&p=%{}'.format(
             self.ip, command, self.password, self.value)
 
-    def _previewUrl(self, cmd):
+    def _previewUrl(self):
         return 'http://{}:8080/live/amba.m3u8'.format(
             self.ip)
 
@@ -271,7 +271,7 @@ class GoPro:
         logging.info('GoPro.getImage()')
         try:
             # use OpenCV to capture a frame and store it in a numpy array
-            stream = cv2.VideoCapture(self.previewURL)
+            stream = cv2.VideoCapture(self._previewURL())
             success, numpyImage = stream.read()
 
             if success:
