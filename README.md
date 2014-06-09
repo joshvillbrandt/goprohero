@@ -16,36 +16,73 @@ At the moment, I am not pursueing additional research into the infrastructure mo
 
 ## Installation
 
-GoProController is developed and tested on Ubuntu. To install the prerequisites, run the following:
+GoProController is developed and tested on Ubuntu 12.04.
 
 ```bash
-sudo apt-get install python-numpy python-opencv git
+sudo apt-get install python-opencv
+sudo pip install goprocontroller
 ```
 
-Then clone the repo:
+## Usage
 
-```bash
-git clone https://github.com/joshvillbrandt/GoProController.git
-```
-
-You can use this module in your own code by using something like this:
+If you only need to control one GoPro, try this:
 
 ```python
-from GoProController import GoProController
-c = GoProController()
-c.test()
+from goprocontroller import GoPro
+camera = GoPro(password='set_during_firmware_install')
+camera.sendCommand('record_on')
+status = camera.getStatus()
 ```
+
+If you need to control many GoPros, put them into the ad-hoc mode and try this:
+
+```python
+# tbd
+```
+
+## API
+
+GoPro:
+
+* `GoPro(ip, password)` - initialize a camera object
+* `setPassword(password)` - change the password of a camera object
+* `getStatus()` - get status packets and translate them
+* `getImage()` - get an image and return it as a base64-encoded PNG string
+* `sendCommand(command)` - send one of the support commands ('power_off', 'power_on', 'record_off', 'record_on', 'mode_video', 'mode_still')
+
+AdHocController:
+
+* tbd
+
+## Change History
+
+This project uses [semantic versioning](http://semver.org/).
+
+### v0.2.0 - 2014/06/09
+
+* Refactor code to separate gopro interface from wifi SSID swapping.
+* Add to PyPI.
+* Now passes Flake8.
+
+### v0.1.1 - 2014/02/17
+
+* Add better documentation.
+
+### v0.1.0 - 2013/10/30
+
+* Initial release.
 
 ## Todo List
 
 * hack the infrastructure network that the GoPro Remote makes and learn how to have GoPros on only one network
-* look into the wifi_networks list that in the settings.in file that is present when updating GoPro firmware
+ * look into the wifi_networks list that in the settings.in file that is present when updating GoPro firmware
 * revamp crappy wifi connect code
 * respond better to keyboard interrupts
 * still some information in the status byte streams i haven't translated... I don't really need the rest though
-* openCV functions can get a segfault if the wifi connection is spotty - that stucks
+* openCV functions can get a segfault if the wifi connection is spotty - that sucks
 * GoPro 3 wifi sometimes shuts off when charging via USB even though the wifi LED is still flashing
 * "charging" indicator might not be accurate with an extra battery pack.
+* OpenCV + virtualenv: http://redesygn.com/jekyll/testing/2014/01/12/install-opencv-numpy-scipy-virtualenv-ubuntu-server.html
 
 ## Contributions
 
