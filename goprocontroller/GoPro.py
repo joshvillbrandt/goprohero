@@ -7,7 +7,7 @@
 from urllib2 import urlopen, HTTPError, URLError
 from inspect import isfunction
 import cv2
-import Image
+from PIL import Image
 import StringIO
 import base64
 import logging
