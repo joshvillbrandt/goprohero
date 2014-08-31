@@ -19,17 +19,15 @@ class GoPro:
     def _hexToDec(val):
         return int(val, 16)
 
-    def _statusUrl(self, command):
-        return 'http://{}/{}?t={}'.format(
-            self.ip, command, self.password)
+    def _statusURL(self, command):
+        return 'http://{}/{}?t={}'.format(self.ip, command, self.password)
 
-    def _commandUrl(self, command, value):
-        return 'http://{}/{}?t={}&p=%{}'.format(
-            self.ip, command, self.password, self.value)
+    def _commandURL(self, command, value):
+        return 'http://{}/{}?t={}&p=%{}'.format(self.ip, command,
+                                                self.password, value)
 
-    def _previewUrl(self):
-        return 'http://{}:8080/live/amba.m3u8'.format(
-            self.ip)
+    def _previewURL(self):
+        return 'http://{}:8080/live/amba.m3u8'.format(self.ip)
 
     statusMatrix = {
         'bacpac/se': {
@@ -231,7 +229,7 @@ class GoPro:
 
             # stop sending requests if a previous request failed
             if camActive:
-                url = self._statusUrl(cmd)
+                url = self._statusURL(cmd)
 
                 # attempt to contact the camera
                 try:
