@@ -10,7 +10,6 @@
 # ugly wifi code by ZalewaPL: http://stackoverflow.com/questions/15005240/
 # more commands here: http://ubuntuone.com/5G2W2LtiQEsXW75uxu2dPl
 
-from .GoPro import GoPro
 import dbus
 import time
 import logging
@@ -18,7 +17,6 @@ import copy
 
 
 class AdHocController:
-    camera = None
     currentSSID = None
     bus = None
     manager = None
@@ -34,9 +32,6 @@ class AdHocController:
             log_file='controller.log',
             log_level=logging.INFO,
             log_format='%(levelname)-7s %(asctime)s   %(message)s'):
-
-        # usage one GoPro instaces for all cameras
-        self.camera = GoPro()
 
         # setup log
         logging.basicConfig(
@@ -139,7 +134,8 @@ class AdHocController:
 
                     # Establish the connection.
                     self.currentSSID = None
-                    self.settings_path, self.connection_path = self.manager.AddAndActivateConnection(
+                    self.settings_path, self.connection_path = \
+                        self.manager.AddAndActivateConnection(
                         connection_params, self.device_path, ap_path)
                     # unfortunately this adds a new 'connection' every time! lame...
                     # would like to prevent 'auto connect' so that it doesn't prompt me when the camera is not there
@@ -184,24 +180,3 @@ class AdHocController:
         # catchll return
         logging.warning('connect(%s) - connection failure', ssid)
         return False
-
-    def getStatus(self, ssid, password):
-        if self.connect(ssid, password):
-            self.camera.setPassword(password)
-            return self.camera.getStatus()
-        else:
-            return copy.deepcopy(GoPro.statusTemplate)
-
-    def getImage(self, ssid, password):
-        if self.connect(ssid, password):
-            self.camera.setPassword(password)
-            return self.camera.getImage()
-        else:
-            return False
-
-    def sendCommand(self, ssid, password, command):
-        if self.connect(ssid, password):
-            self.camera.setPassword(password)
-            return self.camera.sendCommand(command)
-        else:
-            return False

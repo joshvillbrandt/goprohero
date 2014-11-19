@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-# GoProController.py
+# GoPro.py
 # Josh Villbrandt <josh@javconcepts.com>, Blair Gagnon <blairgagnon@gmail.com>
 # 8/24/2013
 
@@ -301,11 +301,11 @@ class GoPro:
                 urlopen(url, timeout=args['timeout']).read()
                 logging.info('GoPro.sendCommand() - http success!')
                 return True
-            except HTTPError, e:
+            except HTTPError as e:
                 logging.warning(
                     'GoPro.sendCommand() - HTTPError opening {}: {}'.format(
                         url, e.code))
-            except URLError, e:
+            except URLError as e:
                 logging.warning(
                     'GoPro.sendCommand() - URLError opening {}: {}'.format(
                         url, e.args))

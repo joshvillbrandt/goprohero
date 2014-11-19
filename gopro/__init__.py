@@ -1,3 +1,3 @@
 # flake8: noqa
-from goprocontroller.GoPro import GoPro
-from goprocontroller.AdHocController import AdHocController
+from gopro.GoPro import GoPro
+from gopro.AdHocController import AdHocController
