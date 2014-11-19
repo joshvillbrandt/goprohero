@@ -2,12 +2,12 @@
 
 # GoPro.py
 # Josh Villbrandt <josh@javconcepts.com>, Blair Gagnon <blairgagnon@gmail.com>
-# 8/24/2013
+# September 2013 - November 2014
 
 from urllib2 import urlopen, HTTPError, URLError
 from inspect import isfunction
-import cv2
-from PIL import Image
+# import cv2
+# from PIL import Image
 import StringIO
 import base64
 import logging
@@ -170,7 +170,7 @@ class GoPro:
         'power_off': {
             'cmd': 'camera/PW',
             'val': '00',
-            'timeout': 0.1
+            'timeout': 2.0
         },
         'power_on': {
             'cmd': 'bacpac/PW',
@@ -180,47 +180,45 @@ class GoPro:
         'record_off': {
             'cmd': 'camera/SH',
             'val': '00',
-            'timeout': 0.1
+            'timeout': 2.0
         },
         'record_on': {
             'cmd': 'camera/SH',
             'val': '01',
-            'timeout': 0.1
+            'timeout': 2.0
         },
         'mode_video': {
             'cmd': 'camera/CM',
             'val': '00',
-            'timeout': 0.1
+            'timeout': 2.0
         },
         'mode_still': {
             'cmd': 'camera/CM',
             'val': '01',
-            'timeout': 0.1
+            'timeout': 2.0
         }
     }
     statusTemplate = {
-        'summary': 'notfound',  # 'notfound', 'off', 'on', or 'recording'
+        'summary': 'notfound',  # 'notfound', 'sleeping', 'on', or 'recording'
         'raw': {}
     }
 
-    def __init__(self, ip='10.5.5.9', password='pass'):
+    def __init__(self, ip='10.5.5.9', password='pass', log_level=logging.INFO):
         self.ip = ip
         self.password = password
 
         # setup log
-        log_level = logging.INFO
         log_format = '%(levelname)-7s %(asctime)s   %(message)s'
         logging.basicConfig(format=log_format, level=log_level)
-        console = logging.StreamHandler()
-        console.setLevel(log_level)
-        console.setFormatter(logging.Formatter(log_format))
-        logging.getLogger('').addHandler(console)
 
-    def setPassword(self, password):
-        self.password = password
+    def password(self, password=None):
+        if password is None:
+            return self.password
+        else:
+            self.password = password
 
-    def getStatus(self):
-        logging.info('GoPro.getStatus()')
+    def status(self):
+        logging.info('GoPro.status()')
         status = copy.deepcopy(self.statusTemplate)
         camActive = True
 
@@ -262,36 +260,36 @@ class GoPro:
         elif 'power' in status and status['power'] == 'off':
             status['summary'] = 'off'
 
-        logging.info('GoPro.getStatus() - result {}'.format(status))
+        logging.info('GoPro.status() - result {}'.format(status))
         return status
 
-    def getImage(self):
-        logging.info('GoPro.getImage()')
-        try:
-            # use OpenCV to capture a frame and store it in a numpy array
-            stream = cv2.VideoCapture(self._previewURL())
-            success, numpyImage = stream.read()
+    # def image(self):
+    #     logging.info('GoPro.image()')
+    #     try:
+    #         # use OpenCV to capture a frame and store it in a numpy array
+    #         stream = cv2.VideoCapture(self._previewURL())
+    #         success, numpyImage = stream.read()
 
-            if success:
-                # use Image to save the image to a file, but actually save it
-                # to a string
-                image = Image.fromarray(numpyImage)
-                output = StringIO.StringIO()
-                image.save(output, format='PNG')
-                str = output.getvalue()
-                output.close()
+    #         if success:
+    #             # use Image to save the image to a file, but actually save it
+    #             # to a string
+    #             image = Image.fromarray(numpyImage)
+    #             output = StringIO.StringIO()
+    #             image.save(output, format='PNG')
+    #             str = output.getvalue()
+    #             output.close()
 
-                logging.info('GoPro.getImage() - success!')
-                return 'data:image/png;base64,'+base64.b64encode(str)
-        except:
-            pass
+    #             logging.info('GoPro.image() - success!')
+    #             return 'data:image/png;base64,'+base64.b64encode(str)
+    #     except:
+    #         pass
 
-        # catchall return statement
-        logging.warning('GoPro.getImage() - failure')
-        return False
+    #     # catchall return statement
+    #     logging.warning('GoPro.image() - failure')
+    #     return False
 
-    def sendCommand(self, command):
-        logging.info('GoPro.sendCommand({})'.format(command))
+    def command(self, command):
+        logging.info('GoPro.command({})'.format(command))
         if command in self.commandMaxtrix:
             args = self.commandMaxtrix[command]
             url = self._commandURL(args['cmd'], args['val'])
@@ -299,19 +297,19 @@ class GoPro:
             # attempt to contact the camera
             try:
                 urlopen(url, timeout=args['timeout']).read()
-                logging.info('GoPro.sendCommand() - http success!')
+                logging.info('GoPro.command() - http success!')
                 return True
             except HTTPError as e:
                 logging.warning(
-                    'GoPro.sendCommand() - HTTPError opening {}: {}'.format(
+                    'GoPro.command() - HTTPError opening {}: {}'.format(
                         url, e.code))
             except URLError as e:
                 logging.warning(
-                    'GoPro.sendCommand() - URLError opening {}: {}'.format(
+                    'GoPro.command() - URLError opening {}: {}'.format(
                         url, e.args))
             else:
                 logging.warning(
-                    'GoPro.sendCommand() - other error opening {}'.format(
+                    'GoPro.command() - other error opening {}'.format(
                         url))
 
         # catchall return statement

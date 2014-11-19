@@ -43,30 +43,33 @@ A typical usage looks like this:
 ```python
 from gopro import GoPro
 camera = GoPro(password='password')
-camera.sendCommand('record_on')
-status = camera.getStatus()
+camera.command('record_on')
+status = camera.status()
 ```
 
 ## API
 
 * `camera = GoPro(password, ip='10.5.5.9')` - initialize a camera object
-* `camera.setPassword(password)` - change the password of a camera object
-* `camera.getStatus()` - get status packets and translate them
-* `camera.getImage()` - get an image and return it as a base64-encoded PNG string
-* `camera.sendCommand(command)` - send one of the supported commands
+* `camera.password(password)` - get or set the password of a camera object
+* `camera.status()` - get status packets and translate them
+* `camera.image()` - get an image and return it as a base64-encoded PNG string
+* `camera.command(command)` - send one of the supported commands
   * avialable commands are `power_off`, `power_on`, `record_off`, `record_on`, `mode_video`, and `mode_still`
+
+The `image()` function is currently disabled because of difficulties installing OpenCV across platforms and because the OpenCV network functions seg fault when the wifi link is spotty.
 
 
 ## Change History
 
 This project uses [semantic versioning](http://semver.org/).
 
-### v0.2.0 - tbd [develop branch]
+### v0.2.0 - 2014/11/??
 
 * Renamed project from `GoProController` to `gopro`
 * Refactored wifi code out of the project leaving only the GoPro commanding and status logic
 * Added support for HERO3+ and HERO4 cameras
 * Added to PyPI
+* Disabled the `image()` function
 * Now passes Flake8
 
 ### v0.1.1 - 2014/02/17
@@ -79,6 +82,8 @@ This project uses [semantic versioning](http://semver.org/).
 
 ## Todo List
 
+* method to list photos and videos
+* method to download photos and videos
 * hack the infrastructure network that the GoPro Remote makes and learn how to have GoPros on only one network
  * look into the wifi_networks list that in the settings.in file that is present when updating GoPro firmware
 * revamp crappy wifi connect code
