@@ -3,18 +3,20 @@
 from setuptools import setup
 
 setup(
-    name='goprocontroller',
-    version='0.2.0',
-    description='A lightweight Python class for interfacing with multiple ' +
-    'GoPros.',
+    name='gopro',
+    version='0.2.0-dev',
+    description='A Python library for controlling GoPro cameras over http.',
     long_description=open('README.md').read(),
-    url='https://github.com/joshvillbrandt/GoProController',
+    url='https://github.com/joshvillbrandt/gopro',
     author='Josh Villbrandt',
     author_email='josh@javconcepts.com',
     license=open('LICENSE').read(),
-    packages=['goprocontroller'],
+    packages=['gopro'],
+    setup_requires=[
+        'tox',
+        'flake8'
+    ],
     install_requires=[
-        'numpy'
     ],
     scripts=[],
     test_suite='tests',
