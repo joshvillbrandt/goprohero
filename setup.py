@@ -14,6 +14,7 @@ setup(
     packages=['gopro'],
     setup_requires=[
         'tox',
+        'nose',
         'flake8'
     ],
     install_requires=[
