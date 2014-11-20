@@ -2,7 +2,7 @@
 
 # GoPro.py
 # Josh Villbrandt <josh@javconcepts.com>, Blair Gagnon <blairgagnon@gmail.com>
-# September 2013 - November 2014
+# August 2013 - November 2014
 
 from urllib2 import urlopen, HTTPError, URLError
 from inspect import isfunction
@@ -29,13 +29,14 @@ class GoPro:
     def _previewURL(self):
         return 'http://{}:8080/live/amba.m3u8'.format(self.ip)
 
+    timeout = 2.0
     statusMatrix = {
         'bacpac/se': {
             'power': {
                 'a': 18,
                 'b': 20,
                 'translate': {
-                    '00': 'off',
+                    '00': 'sleep',
                     '01': 'on'
                 }
             }
@@ -44,7 +45,7 @@ class GoPro:
             'batt1': {
                 'a': 38,
                 'b': 40,
-                'translate': _hexToDec
+                'translate': '_hexToDec'
             }
         },
         'camera/sx': {  # the first 62 bytes of sx are almost the same as se
@@ -81,7 +82,7 @@ class GoPro:
             'secselapsed': {
                 'a': 26,
                 'b': 30,
-                'translate': _hexToDec
+                'translate': '_hexToDec'
             },
             'orientation': {
                 'a': 37,
@@ -102,22 +103,22 @@ class GoPro:
             'mem': {  # i really have no idea what this is
                 'a': 42,
                 'b': 46,
-                'translate': _hexToDec
+                'translate': '_hexToDec'
             },
             'npics': {
                 'a': 46,
                 'b': 50,
-                'translate': _hexToDec
+                'translate': '_hexToDec'
             },
             'minsremaining': {
                 'a': 50,
                 'b': 54,
-                'translate': _hexToDec
+                'translate': '_hexToDec'
             },
             'nvids': {
                 'a': 54,
                 'b': 58,
-                'translate': _hexToDec
+                'translate': '_hexToDec'
             },
             'record': {
                 'a': 60,
@@ -130,7 +131,7 @@ class GoPro:
             'batt2': {
                 'a': 90,
                 'b': 92,
-                'translate': _hexToDec
+                'translate': '_hexToDec'
             },
             'vidres': {
                 'a': 100,
@@ -167,35 +168,65 @@ class GoPro:
         }
     }
     commandMaxtrix = {
-        'power_off': {
+        'power': {
             'cmd': 'camera/PW',
-            'val': '00',
-            'timeout': 2.0
+            'translate': {
+                'sleep': '00',
+                'on': '01'
+            }
         },
-        'power_on': {
-            'cmd': 'bacpac/PW',
-            'val': '01',
-            'timeout': 2.0
-        },
-        'record_off': {
+        'record': {
             'cmd': 'camera/SH',
-            'val': '00',
-            'timeout': 2.0
+            'translate': {
+                'off': '00',
+                'on': '01'
+            }
         },
-        'record_on': {
-            'cmd': 'camera/SH',
-            'val': '01',
-            'timeout': 2.0
+        'preview': {
+            'cmd': 'camera/PV',
+            'translate': {
+                'off': '00',
+                'on': '02'
+            }
         },
-        'mode_video': {
+        'orientation': {
+            'cmd': 'camera/UP',
+            'translate': {
+                'up': '00',
+                'down': '01'
+            }
+        },
+        'mode': {
             'cmd': 'camera/CM',
-            'val': '00',
-            'timeout': 2.0
+            'translate': {
+                'video': '00',
+                'still': '01',
+                'burst': '02',
+                'timelapse': '03',
+                'timer': '04',
+                'hdmi': '05'
+            }
         },
-        'mode_still': {
-            'cmd': 'camera/CM',
-            'val': '01',
-            'timeout': 2.0
+        'volume': {
+            'cmd': 'camera/BS',
+            'translate': {
+                '0': '00',
+                '70': '01',
+                '100': '02'
+            }
+        },
+        'locate': {
+            'cmd': 'camera/LL',
+            'translate': {
+                'off': '00',
+                'on': '01'
+            }
+        },
+        'delete_last': {
+            'cmd': 'camera/DL'
+        },
+        'delete_all': {
+            'cmd': 'camera/DA'
         }
     }
     statusTemplate = {
@@ -208,7 +239,7 @@ class GoPro:
         self.password = password
 
         # setup log
-        log_format = '%(levelname)-7s %(asctime)s   %(message)s'
+        log_format = '%(asctime)s   %(message)s'
         logging.basicConfig(format=log_format, level=log_level)
 
     def password(self, password=None):
@@ -231,25 +262,23 @@ class GoPro:
 
                 # attempt to contact the camera
                 try:
-                    response = urlopen(url, timeout=1).read().encode('hex')
+                    response = urlopen(
+                        url, timeout=self.timeout).read().encode('hex')
                     status['raw'][cmd] = response  # save raw response
 
                     # loop through different parts we know how to translate
                     for item in self.statusMatrix[cmd]:
+                        print 'item is {}'.format(item)
                         args = self.statusMatrix[cmd][item]
                         part = response[args['a']:args['b']]
 
                         # translate the response value if we know how
                         if 'translate' in args:
-                            if isfunction(args['translate']):
-                                status[item] = args['translate'](part)
-                            elif part in args['translate']:
-                                status[item] = args['translate'][part]
-                            else:
-                                status[item] = 'translate error (' + part + ')'
+                            status[item] = self._translate(
+                                args['translate'], part)
                         else:
                             status[item] = part
-                except:
+                except HTTPError, URLError:
                     camActive = False
 
         # build summary
@@ -288,15 +317,17 @@ class GoPro:
     #     logging.warning('GoPro.image() - failure')
     #     return False
 
-    def command(self, command):
-        logging.info('GoPro.command({})'.format(command))
+    def command(self, command, value=None):
+        logging.info('GoPro.command({}, {})'.format(command, value))
         if command in self.commandMaxtrix:
             args = self.commandMaxtrix[command]
-            url = self._commandURL(args['cmd'], args['val'])
+            if value is not None and value in args['translate']:
+                value = args['translate'][value]
+            url = self._commandURL(args['cmd'], value)
 
             # attempt to contact the camera
             try:
-                urlopen(url, timeout=args['timeout']).read()
+                urlopen(url, timeout=self.timeout).read()
                 logging.info('GoPro.command() - http success!')
                 return True
             except HTTPError as e:
@@ -314,3 +345,17 @@ class GoPro:
 
         # catchall return statement
         return False
+
+    def _translate(self, config, value):
+        if isinstance(config, dict):
+            # use a lookup dictionary
+            if value in config:
+                return config[value]
+            else:
+                return 'translate error: {} not found'.format(value)
+        else:
+            # use an internal function
+            if hasattr(self, config):
+                return getattr(self, config)(value)
+            else:
+                return 'translate error: {} not a function'.format(value)

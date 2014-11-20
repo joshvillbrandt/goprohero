@@ -15,7 +15,7 @@ Requirements:
 
 ## Background
 
-My original use case for this code is to remotely configure and check the status of about ten GoPro HERO3 cameras from afar. We built a tiny BeagleBone PC running Ubuntu that runs this script along with the [GoProController](https://github.com/joshvillbrandt/GoProController). The BeagleBone PC has a wifi adapter to communicate with the GoPros and talks back to the primary network over wired Ethernet.
+My original use case for this code is to remotely configure and check the status of about ten GoPro HERO3 cameras from afar. We built a tiny BeagleBone PC running Ubuntu that runs this script along with the [GoProControllerUI](https://github.com/joshvillbrandt/GoProControllerUI). The BeagleBone PC has a wifi adapter to communicate with the GoPros and talks back to the primary network over wired Ethernet.
 
 During the development of this script, we discovered that the GoPro can work in entirely two different Wifi scnearios. This script takes advantage of the camera's ability to connect to an iOS app. In this scenario, the camera creates an ad-hoc network that a client can connect to. The cameras can also be configured to jump on to an infrastructure network. The intended scenario here is for use with GoPro's remote to control multiple cameras simultaneously. From my limited testing, it seems that the remote-to-camera communication is much more limited. The obvious advantage though is that one doesn't have to jump on different wifi networks to talk to multiple cameras.
 
@@ -43,7 +43,7 @@ A typical usage looks like this:
 ```python
 from gopro import GoPro
 camera = GoPro(password='password')
-camera.command('record_on')
+camera.command('record', 'on')
 status = camera.status()
 ```
 
@@ -53,8 +53,8 @@ status = camera.status()
 * `camera.password(password)` - get or set the password of a camera object
 * `camera.status()` - get status packets and translate them
 * `camera.image()` - get an image and return it as a base64-encoded PNG string
-* `camera.command(command)` - send one of the supported commands
-  * avialable commands are `power_off`, `power_on`, `record_off`, `record_on`, `mode_video`, and `mode_still`
+* `camera.command(param, value)` - send one of the supported commands
+  * check the source for available commands - better documented list to come
 
 The `image()` function is currently disabled because of difficulties installing OpenCV across platforms and because the OpenCV network functions seg fault when the wifi link is spotty.
 
