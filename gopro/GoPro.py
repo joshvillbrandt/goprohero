@@ -6,6 +6,7 @@
 
 import logging
 import copy
+import socket
 # import cv2
 # from PIL import Image
 # import StringIO
@@ -286,7 +287,7 @@ class GoPro:
                                 args['translate'], part)
                         else:
                             status[item] = part
-                except (HTTPError, URLError):
+                except (HTTPError, URLError, socket.timeout):
                     camActive = False
 
         # build summary
@@ -338,15 +339,9 @@ class GoPro:
                 urlopen(url, timeout=self.timeout).read()
                 logging.info('{} - http success!'.format(func_str))
                 return True
-            except HTTPError as e:
-                logging.warning('{} - HTTPError opening {}: {}'.format(
-                    func_str, url, e.code))
-            except URLError as e:
-                logging.warning('{} - URLError opening {}: {}'.format(
-                    func_str, url, e.args))
-            else:
-                logging.warning('{} - other error opening {}'.format(
-                    func_str, url))
+            except (HTTPError, URLError, socket.timeout) as e:
+                logging.warning('{} - error opening {}: {}'.format(
+                    func_str, url, e))
 
         # catchall return statement
         return False
