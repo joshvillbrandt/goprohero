@@ -30,14 +30,14 @@ class GoPro:
         return int(val, 16)
 
     def _statusURL(self, command):
-        return 'http://{}/{}?t={}'.format(self.ip, command, self.password)
+        return 'http://{}/{}?t={}'.format(self._ip, command, self._password)
 
     def _commandURL(self, command, value):
-        return 'http://{}/{}?t={}&p=%{}'.format(self.ip, command,
-                                                self.password, value)
+        return 'http://{}/{}?t={}&p=%{}'.format(self._ip, command,
+                                                self._password, value)
 
     def _previewURL(self):
-        return 'http://{}:8080/live/amba.m3u8'.format(self.ip)
+        return 'http://{}:8080/live/amba.m3u8'.format(self._ip)
 
     timeout = 2.0
     statusMatrix = {
@@ -245,8 +245,8 @@ class GoPro:
     }
 
     def __init__(self, ip='10.5.5.9', password='pass', log_level=logging.INFO):
-        self.ip = ip
-        self.password = password
+        self._ip = ip
+        self._password = password
 
         # setup log
         log_format = '%(asctime)s   %(message)s'
@@ -254,12 +254,11 @@ class GoPro:
 
     def password(self, password=None):
         if password is None:
-            return self.password
+            return self._password
         else:
-            self.password = password
+            self._password = password
 
     def status(self):
-        logging.info('GoPro.status()')
         status = copy.deepcopy(self.statusTemplate)
         camActive = True
 
@@ -302,7 +301,6 @@ class GoPro:
         return status
 
     # def image(self):
-    #     logging.info('GoPro.image()')
     #     try:
     #         # use OpenCV to capture a frame and store it in a numpy array
     #         stream = cv2.VideoCapture(self._previewURL())
@@ -327,7 +325,8 @@ class GoPro:
     #     return False
 
     def command(self, command, value=None):
-        logging.info('GoPro.command({}, {})'.format(command, value))
+        func_str = 'GoPro.command({}, {})'.format(command, value)
+
         if command in self.commandMaxtrix:
             args = self.commandMaxtrix[command]
             if value is not None and value in args['translate']:
@@ -337,20 +336,17 @@ class GoPro:
             # attempt to contact the camera
             try:
                 urlopen(url, timeout=self.timeout).read()
-                logging.info('GoPro.command() - http success!')
+                logging.info('{} - http success!'.format(func_str))
                 return True
             except HTTPError as e:
-                logging.warning(
-                    'GoPro.command() - HTTPError opening {}: {}'.format(
-                        url, e.code))
+                logging.warning('{} - HTTPError opening {}: {}'.format(
+                    func_str, url, e.code))
             except URLError as e:
-                logging.warning(
-                    'GoPro.command() - URLError opening {}: {}'.format(
-                        url, e.args))
+                logging.warning('{} - URLError opening {}: {}'.format(
+                    func_str, url, e.args))
             else:
-                logging.warning(
-                    'GoPro.command() - other error opening {}'.format(
-                        url))
+                logging.warning('{} - other error opening {}'.format(
+                    func_str, url))
 
         # catchall return statement
         return False
