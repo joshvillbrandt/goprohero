@@ -278,7 +278,6 @@ class GoPro:
 
                     # loop through different parts we know how to translate
                     for item in self.statusMatrix[cmd]:
-                        print 'item is {}'.format(item)
                         args = self.statusMatrix[cmd][item]
                         part = response[args['a']:args['b']]
 
