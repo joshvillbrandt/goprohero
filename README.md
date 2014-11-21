@@ -55,6 +55,7 @@ status = camera.status()
 * `camera.image()` - get an image and return it as a base64-encoded PNG string
 * `camera.command(param, value)` - send one of the supported commands
   * check the source for available commands - better documented list to come
+* `camera.test(url)` - a simple testing interface to try out HTTP requests
 * `config = GoPro.config()` - gets the current configuration
 
 The `image()` function is currently disabled because of difficulties installing OpenCV across platforms and because the OpenCV network functions seg fault when the wifi link is spotty.

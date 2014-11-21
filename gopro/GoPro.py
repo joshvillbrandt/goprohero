@@ -180,7 +180,7 @@ class GoPro:
     }
     commandMaxtrix = {
         'power': {
-            'cmd': 'camera/PW',
+            'cmd': 'bacpac/PW',
             'translate': {
                 'sleep': '00',
                 'on': '01'
@@ -345,6 +345,20 @@ class GoPro:
 
         # catchall return statement
         return False
+
+    def test(self, url, toHex=True):
+        try:
+            url = 'http://{}{}'.format(self._ip, url)
+
+            response = urlopen(
+                url, timeout=self.timeout).read()
+
+            if toHex:
+                response = response.encode('hex')
+
+            print(response)
+        except (HTTPError, URLError, socket.timeout) as e:
+            print(e)
 
     def _translate(self, config, value):
         if isinstance(config, dict):
