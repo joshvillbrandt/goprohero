@@ -12,3 +12,4 @@ class TestGoPro(unittest.TestCase):
     def test_camera_init(self):
         # initialize a camera object
         camera = GoPro('password')
+        self.assertTrue(camera is not None)
