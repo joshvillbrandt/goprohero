@@ -4,22 +4,25 @@
 # Josh Villbrandt <josh@javconcepts.com>, Blair Gagnon <blairgagnon@gmail.com>
 # August 2013 - November 2014
 
-from urllib2 import urlopen, HTTPError, URLError
-from inspect import isfunction
-# import cv2
-# from PIL import Image
-import StringIO
-import base64
 import logging
 import copy
+# import cv2
+# from PIL import Image
+# import StringIO
+# import base64
+
+try:
+    from urllib.request import urlopen, HTTPError, URLError
+except ImportError:
+    from urllib2 import urlopen, HTTPError, URLError
 
 
 class GoPro:
     @staticmethod
     def config():
         return {
-            'status': self.statusMatrix,
-            'command': self.commandMaxtrix
+            'status': GoPro.statusMatrix,
+            'command': GoPro.commandMaxtrix
         }
 
     @staticmethod
@@ -285,7 +288,7 @@ class GoPro:
                                 args['translate'], part)
                         else:
                             status[item] = part
-                except HTTPError, URLError:
+                except (HTTPError, URLError):
                     camActive = False
 
         # build summary
