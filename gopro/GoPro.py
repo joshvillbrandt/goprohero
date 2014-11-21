@@ -16,6 +16,13 @@ import copy
 
 class GoPro:
     @staticmethod
+    def config():
+        return {
+            'status': self.statusMatrix,
+            'command': self.commandMaxtrix
+        }
+
+    @staticmethod
     def _hexToDec(val):
         return int(val, 16)
 
@@ -286,8 +293,8 @@ class GoPro:
             status['summary'] = 'recording'
         elif 'power' in status and status['power'] == 'on':
             status['summary'] = 'on'
-        elif 'power' in status and status['power'] == 'off':
-            status['summary'] = 'off'
+        elif 'power' in status and status['power'] == 'sleep':
+            status['summary'] = 'sleep'
 
         logging.info('GoPro.status() - result {}'.format(status))
         return status
