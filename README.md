@@ -49,17 +49,24 @@ status = camera.status()
 
 ## API
 
-* `camera = GoPro(password, ip='10.5.5.9')` - initialize a camera object
-* `camera.password(password)` - get or set the password of a camera object
-* `camera.status()` - get status packets and translate them
-* `camera.image()` - get an image and return it as a base64-encoded PNG string
-* `camera.command(param, value)` - send one of the supported commands
+The GoPro class:
+
+* `GoPro(password, ip='10.5.5.9')` - initialize a camera object
+* `password(password)` - get or set the password of a camera object
+* `status()` - get status packets and translate them
+* `image()` - get an image and return it as a base64-encoded PNG string
+* `command(param, value)` - send one of the supported commands
   * check the source for available commands - better documented list to come
-* `camera.test(url)` - a simple testing interface to try out HTTP requests
-* `config = GoPro.config()` - gets the current configuration
+* `test(url)` - a simple testing interface to try out HTTP requests
+* `@classmethod config()` - returns a dictionary with the current configuration
 
 The `image()` function is currently disabled because of difficulties installing OpenCV across platforms and because the OpenCV network functions seg fault when the wifi link is spotty.
 
+The Wireless class:
+
+* `Wireless()` - initialize a wifi driver for Ubuntu and Mac
+* `connect(ssid, password)` - attempts to connect to a network and returns True on success
+* `current()` - returns the name of the current network or None otherwise
 
 ## Change History
 
@@ -68,7 +75,6 @@ This project uses [semantic versioning](http://semver.org/).
 ### v0.2.0 - 2014/11/??
 
 * Renamed project from `GoProController` to `gopro`
-* Refactored wifi code out of the project leaving only the GoPro commanding and status logic
 * Added support for HERO3+ and HERO4 cameras
 * Added to PyPI
 * Disabled the `image()` function

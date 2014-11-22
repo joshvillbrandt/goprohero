@@ -19,15 +19,15 @@ except ImportError:
 
 
 class GoPro:
-    @staticmethod
-    def config():
+    @classmethod
+    def config(self):
         return {
             'status': GoPro.statusMatrix,
             'command': GoPro.commandMaxtrix
         }
 
-    @staticmethod
-    def _hexToDec(val):
+    @classmethod
+    def _hexToDec(self, val):
         return int(val, 16)
 
     def _statusURL(self, command):
