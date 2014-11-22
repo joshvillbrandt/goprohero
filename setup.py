@@ -18,6 +18,7 @@ setup(
         'flake8'
     ],
     install_requires=[
+        'colorama'
     ],
     scripts=[],
     test_suite='tests',

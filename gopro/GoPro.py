@@ -7,6 +7,7 @@
 import logging
 import copy
 import socket
+from colorama import Fore
 # import cv2
 # from PIL import Image
 # import StringIO
@@ -287,7 +288,9 @@ class GoPro:
                                 args['translate'], part)
                         else:
                             status[item] = part
-                except (HTTPError, URLError, socket.timeout):
+                except (HTTPError, URLError, socket.timeout) as e:
+                    logging.warning('{}{} - error opening {}: {}{}'.format(
+                        Fore.YELLOW, 'GoPro.status()', url, e, Fore.RESET))
                     camActive = False
 
         # build summary
@@ -340,8 +343,8 @@ class GoPro:
                 logging.info('{} - http success!'.format(func_str))
                 return True
             except (HTTPError, URLError, socket.timeout) as e:
-                logging.warning('{} - error opening {}: {}'.format(
-                    func_str, url, e))
+                logging.warning('{}{} - error opening {}: {}{}'.format(
+                    Fore.YELLOW, func_str, url, e, Fore.RESET))
 
         # catchall return statement
         return False
