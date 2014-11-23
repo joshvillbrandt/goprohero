@@ -53,7 +53,7 @@ class GoPro:
                 'a': 18,
                 'b': 20,
                 'translate': {
-                    '00': 'sleep',
+                    '00': 'sleeping',
                     '01': 'on'
                 }
             }
@@ -303,8 +303,8 @@ class GoPro:
             status['summary'] = 'recording'
         elif 'power' in status and status['power'] == 'on':
             status['summary'] = 'on'
-        elif 'power' in status and status['power'] == 'sleep':
-            status['summary'] = 'sleep'
+        elif 'power' in status and status['power'] == 'sleeping':
+            status['summary'] = 'sleeping'
 
         logging.info('GoPro.status() - result {}'.format(status))
         return status
@@ -359,8 +359,9 @@ class GoPro:
 
     def test(self, url, toHex=True):
         try:
-            url = 'http://{}{}'.format(self._ip, url)
+            url = 'http://{}/{}'.format(self._ip, url)
 
+            print(url)
             response = urlopen(
                 url, timeout=self.timeout).read()
 
