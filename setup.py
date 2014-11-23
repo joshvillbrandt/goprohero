@@ -4,7 +4,7 @@ from setuptools import setup
 
 setup(
     name='gopro',
-    version='0.2.0-dev2',
+    version='0.2.0-dev3',
     description='A Python library for controlling GoPro cameras over http.',
     long_description=open('README.md').read(),
     url='https://github.com/joshvillbrandt/gopro',

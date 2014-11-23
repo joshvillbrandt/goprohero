@@ -20,6 +20,8 @@ My original use case for this code is to remotely configure and check the status
 
 During the development of this library, we discovered that there are two entirely different methods for communicating with a GoPro wirelessly. The first method is an HTTP protocol  intended for the iOS and Android applications. In this scenario, the camera creates an ad-hoc network that a client device can connect to. A second method is available for the GoPro Wifi Remote. In this scenario, the remote creates an infrastructure network that multiple GoPros can connect to. While the infrastructure mode would seem ideal for communicating with multiple cameras simultaneously, it is much more difficult to interface with (it doesn't appear to be using standard TCP/IP) and lacks the complete functionality that the first method has (can't download files or view the live preview.) For these reasons, this library uses the ad-hoc/HTTP method.
 
+This project also produced the [wireless](https://github.com/joshvillbrandt/wireless) Python library to simply connecting to multiple cameras across platforms.
+
 ## Setup
 
 Install the `gopro` library and optional OpenCV library:
@@ -49,8 +51,6 @@ status = camera.status()
 
 ## API
 
-The GoPro class:
-
 * `GoPro(password, ip='10.5.5.9')` - initialize a camera object
 * `password(password)` - get or set the password of a camera object
 * `status()` - get status packets and translate them
@@ -61,12 +61,6 @@ The GoPro class:
 * `@classmethod config()` - returns a dictionary with the current configuration
 
 The `image()` function is currently disabled because of difficulties installing OpenCV across platforms and because the OpenCV network functions seg fault when the wifi link is spotty.
-
-The Wireless class:
-
-* `Wireless()` - initialize a wifi driver for Ubuntu and Mac
-* `connect(ssid, password)` - attempts to connect to a network and returns True on success
-* `current()` - returns the name of the current network or None otherwise
 
 ## Change History
 
