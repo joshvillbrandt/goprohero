@@ -329,6 +329,9 @@ class GoPro:
         except NameError:
             logging.warning('{}{} - OpenCV not installed{}'.format(
                 Fore.YELLOW, 'GoPro.image()', Fore.RESET))
+        except IOError as e:
+            logging.warning('{}{} - Pillow prereqs not installed: {}{}'.format(
+                Fore.YELLOW, 'GoPro.image()', e, Fore.RESET))
 
         # catchall return statement
         return False

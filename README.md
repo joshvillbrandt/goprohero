@@ -28,7 +28,6 @@ Install the `gopro` library and optional OpenCV library:
 
 ```bash
 sudo pip install gopro
-sudo apt-get install python-opencv # optional, Ubuntu
 ```
 
 To connect with a GoPro, you will need to have the camera on the local network. This can be accomplished by:
@@ -37,6 +36,21 @@ To connect with a GoPro, you will need to have the camera on the local network. 
 1. Connecting the computer running this library to the camera's network
 
 This connection process can be automated with the [GoProController](https://github.com/joshvillbrandt/GoProController). Once connect
+
+### Live Stream Image Capture
+
+Some additional setup is required to capture a snapshot of the camera's live stream.
+
+In Ubuntu 14.04, you'll need to install opencv and the [prereqs for Pillow](http://pillow.readthedocs.org/installation.html#linux-installation):
+
+```bash
+sudo apt-get install python-opencv
+sudo apt-get install libtiff5-dev libjpeg8-dev zlib1g-dev libfreetype6-dev liblcms2-dev libwebp-dev tcl8.6-dev tk8.6-dev python-tk
+sudo pip uninstall Pillow; sudo pip install Pillow
+sudo
+```
+
+For Mac, follow [this guide](https://jjyap.wordpress.com/2014/05/24/installing-opencv-2-4-9-on-mac-osx-with-python-support/) for install opencv with Homebrew.
 
 ## Usage
 
