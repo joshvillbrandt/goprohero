@@ -6,27 +6,27 @@ A Python library for controlling GoPro cameras over http.
 
 ## Description
 
-This library can interface with a GoPro camera on the local network. Once conneced, full control of the camera and all configuration details are available. OpenCV is used to open the stream and save a single frame.
+This library can interface with a GoPro camera on the local network. Once connected, full control of the camera and all configuration details are available. OpenCV (if installed) is used to open the live stream and save a single frame.
 
 Requirements:
 
 * GoPro HERO3, GoPro HERO3+, or GoPro HERO4
 * A computer with a wireless card
+* (optional) OpenCV
 
 ## Background
 
-My original use case for this code is to remotely configure and check the status of about ten GoPro HERO3 cameras from afar. We built a tiny BeagleBone PC running Ubuntu that runs this script along with the [GoProControllerUI](https://github.com/joshvillbrandt/GoProControllerUI). The BeagleBone PC has a wifi adapter to communicate with the GoPros and talks back to the primary network over wired Ethernet.
+My original use case for this code is to remotely configure and check the status of approximately ten GoPro HERO3 cameras from afar. We built a tiny BeagleBone PC running Ubuntu that uses this library along with the [GoProController](https://github.com/joshvillbrandt/GoProController). The BeagleBone PC has a wifi adapter to communicate with the GoPros and talks back to the primary network over wired Ethernet.
 
-During the development of this script, we discovered that the GoPro can work in entirely two different Wifi scnearios. This script takes advantage of the camera's ability to connect to an iOS app. In this scenario, the camera creates an ad-hoc network that a client can connect to. The cameras can also be configured to jump on to an infrastructure network. The intended scenario here is for use with GoPro's remote to control multiple cameras simultaneously. From my limited testing, it seems that the remote-to-camera communication is much more limited. The obvious advantage though is that one doesn't have to jump on different wifi networks to talk to multiple cameras.
-
-At the moment, I am not pursueing additional research into the infrastructure mode of the cameras. However, if someone can provide me an example code controlling two cameras without jumping networks, then I'm happy to change this code around. Check out my [Infrastructure Wifi Research](Infrastructure Wifi Research.md) from last September for a good starting point on this approach.
+During the development of this library, we discovered that there are two entirely different methods for communicating with a GoPro wirelessly. The first method is an HTTP protocol  intended for the iOS and Android applications. In this scenario, the camera creates an ad-hoc network that a client device can connect to. A second method is available for the GoPro Wifi Remote. In this scenario, the remote creates an infrastructure network that multiple GoPros can connect to. While the infrastructure mode would seem ideal for communicating with multiple cameras simultaneously, it is much more difficult to interface with (it doesn't appear to be using standard TCP/IP) and lacks the complete functionality that the first method has (can't download files or view the live preview.) For these reasons, this library uses the ad-hoc/HTTP method.
 
 ## Setup
 
-Install the `gopro` library using pip:
+Install the `gopro` library and optional OpenCV library:
 
 ```bash
 sudo pip install gopro
+sudo apt-get install python-opencv # optional, Ubuntu
 ```
 
 To connect with a GoPro, you will need to have the camera on the local network. This can be accomplished by:
@@ -92,15 +92,8 @@ This project uses [semantic versioning](http://semver.org/).
 
 * method to list photos and videos
 * method to download photos and videos
-* hack the infrastructure network that the GoPro Remote makes and learn how to have GoPros on only one network
- * look into the wifi_networks list that in the settings.in file that is present when updating GoPro firmware
-* revamp crappy wifi connect code
-* respond better to keyboard interrupts
 * still some information in the status byte streams i haven't translated... I don't really need the rest though
 * openCV functions can get a segfault if the wifi connection is spotty - that sucks
-* GoPro 3 wifi sometimes shuts off when charging via USB even though the wifi LED is still flashing
-* "charging" indicator might not be accurate with an extra battery pack.
-* OpenCV + virtualenv: http://redesygn.com/jekyll/testing/2014/01/12/install-opencv-numpy-scipy-virtualenv-ubuntu-server.html
 
 ## Contributions
 

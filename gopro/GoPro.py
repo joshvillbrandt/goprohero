@@ -5,18 +5,23 @@
 # August 2013 - November 2014
 
 import logging
-import copy
 import socket
 from colorama import Fore
-# import cv2
-# from PIL import Image
-# import StringIO
-# import base64
 
+# urllib support for Python 2 and Python 3
 try:
     from urllib.request import urlopen, HTTPError, URLError
 except ImportError:
     from urllib2 import urlopen, HTTPError, URLError
+
+# attempt imports for image() function
+try:
+    import cv2
+    from PIL import Image
+    import StringIO
+    import base64
+except ImportError:
+    pass
 
 
 class GoPro:
@@ -241,10 +246,6 @@ class GoPro:
             'cmd': 'camera/DA'
         }
     }
-    statusTemplate = {
-        'summary': 'notfound',  # 'notfound', 'sleeping', 'on', or 'recording'
-        'raw': {}
-    }
 
     def __init__(self, ip='10.5.5.9', password='pass', log_level=logging.INFO):
         self._ip = ip
@@ -261,7 +262,11 @@ class GoPro:
             self._password = password
 
     def status(self):
-        status = copy.deepcopy(self.statusTemplate)
+        status = {
+            # summary = 'notfound', 'sleeping', 'on', or 'recording'
+            'summary': 'notfound',
+            'raw': {}
+        }
         camActive = True
 
         # loop through different status URLs
@@ -304,29 +309,29 @@ class GoPro:
         logging.info('GoPro.status() - result {}'.format(status))
         return status
 
-    # def image(self):
-    #     try:
-    #         # use OpenCV to capture a frame and store it in a numpy array
-    #         stream = cv2.VideoCapture(self._previewURL())
-    #         success, numpyImage = stream.read()
+    def image(self):
+        try:
+            # use OpenCV to capture a frame and store it in a numpy array
+            stream = cv2.VideoCapture(self._previewURL())
+            success, numpyImage = stream.read()
 
-    #         if success:
-    #             # use Image to save the image to a file, but actually save it
-    #             # to a string
-    #             image = Image.fromarray(numpyImage)
-    #             output = StringIO.StringIO()
-    #             image.save(output, format='PNG')
-    #             str = output.getvalue()
-    #             output.close()
+            if success:
+                # use Image to save the image to a file, but actually save it
+                # to a string
+                image = Image.fromarray(numpyImage)
+                output = StringIO.StringIO()
+                image.save(output, format='PNG')
+                str = output.getvalue()
+                output.close()
 
-    #             logging.info('GoPro.image() - success!')
-    #             return 'data:image/png;base64,'+base64.b64encode(str)
-    #     except:
-    #         pass
+                logging.info('GoPro.image() - success!')
+                return 'data:image/png;base64,'+base64.b64encode(str)
+        except NameError as e:
+            logging.warning('{}{} - OpenCV not installed{}'.format(
+                Fore.YELLOW, 'GoPro.image()', Fore.RESET))
 
-    #     # catchall return statement
-    #     logging.warning('GoPro.image() - failure')
-    #     return False
+        # catchall return statement
+        return False
 
     def command(self, command, value=None):
         func_str = 'GoPro.command({}, {})'.format(command, value)

@@ -18,6 +18,7 @@ setup(
         'flake8'
     ],
     install_requires=[
+        'PIL',
         'colorama'
     ],
     scripts=[],
