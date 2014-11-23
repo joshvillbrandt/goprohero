@@ -18,7 +18,7 @@ setup(
         'flake8'
     ],
     install_requires=[
-        'PIL',
+        'Pillow',
         'colorama'
     ],
     scripts=[],

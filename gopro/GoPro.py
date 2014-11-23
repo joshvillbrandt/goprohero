@@ -326,7 +326,7 @@ class GoPro:
 
                 logging.info('GoPro.image() - success!')
                 return 'data:image/png;base64,'+base64.b64encode(str)
-        except NameError as e:
+        except NameError:
             logging.warning('{}{} - OpenCV not installed{}'.format(
                 Fore.YELLOW, 'GoPro.image()', Fore.RESET))
 
