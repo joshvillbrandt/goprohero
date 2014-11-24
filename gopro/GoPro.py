@@ -239,7 +239,7 @@ class GoPro:
             },
             'model': {
                 'translate': '_extractModel'
-            }.
+            },
             'firmware': {
                 'translate': '_extractFirmware'
             }
