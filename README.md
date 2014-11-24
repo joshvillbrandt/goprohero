@@ -50,7 +50,14 @@ sudo pip uninstall Pillow; sudo pip install Pillow
 sudo
 ```
 
-For Mac, follow [this guide](https://jjyap.wordpress.com/2014/05/24/installing-opencv-2-4-9-on-mac-osx-with-python-support/) for install opencv with Homebrew.
+For Mac, follow [this guide](https://jjyap.wordpress.com/2014/05/24/installing-opencv-2-4-9-on-mac-osx-with-python-support/) for install opencv with Homebrew. For me, this boiled down to:
+
+```bash
+brew tap homebrew/science
+brew install opencv
+sudo ln -s /usr/local/Cellar/opencv/2.4.9/lib/python2.7/site-packages/cv.py /Library/Python/2.7/site-packages/cv.py
+sudo ln -s /usr/local/Cellar/opencv/2.4.9/lib/python2.7/site-packages/cv2.so /Library/Python/2.7/site-packages/cv2.so
+```
 
 ## Usage
 
