@@ -59,15 +59,25 @@ class GoPro:
         return output
 
     @classmethod
-    def _extractFirmware(self, val):
+    def _extractModel(self, val):
         parts = self._splitByControlCharacters(val.decode('hex'))
         if len(parts) > 0:
-            return parts[0]
+            # the first two chunks of 'HD4.02.01.02.00'
+            return '.'.join(parts[0].split('.')[0:2])
         else:
             return None
 
     @classmethod
-    def _extractModel(self, val):
+    def _extractFirmware(self, val):
+        parts = self._splitByControlCharacters(val.decode('hex'))
+        if len(parts) > 0:
+            # everything except the first two chunks of 'HD4.02.01.02.00'
+            return '.'.join(parts[0].split('.')[2:])
+        else:
+            return None
+
+    @classmethod
+    def _extractName(self, val):
         parts = self._splitByControlCharacters(val.decode('hex'))
         if len(parts) > 1:
             return parts[1]
@@ -200,7 +210,9 @@ class GoPro:
                     '05': '2.7K',
                     '06': '2.7KCin',
                     '07': '4K',
-                    '08': '4KCin'
+                    '08': '4KCin',
+                    '09': '1080p SuperView',
+                    '10': '720p SuperView'
                 }
             },
             'fps': {
@@ -222,11 +234,14 @@ class GoPro:
             }
         },
         'camera/cv': {
-            'firmware': {
-                'translate': '_extractFirmware'
+            'name': {
+                'translate': '_extractName'
             },
             'model': {
                 'translate': '_extractModel'
+            }.
+            'firmware': {
+                'translate': '_extractFirmware'
             }
         }
     }
