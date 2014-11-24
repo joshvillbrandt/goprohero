@@ -6,6 +6,7 @@
 
 import logging
 import socket
+import unicodedata
 from colorama import Fore
 
 # urllib support for Python 2 and Python 3
@@ -35,6 +36,43 @@ class GoPro:
     @classmethod
     def _hexToDec(self, val):
         return int(val, 16)
+
+    @classmethod
+    def _splitByControlCharacters(self, val):
+        # extract non-control characters
+        output = []
+        s = ''
+        for c in unicode(val):
+            if unicodedata.category(c)[0] == 'C':
+                if len(s) > 0:
+                    # start a new string if we found a control character
+                    output.append(str(s))
+                    s = ''
+            else:
+                s += c
+
+        # clean up any left over string
+        if len(s) > 0:
+            output.append(str(s))
+
+        # return extracts strings
+        return output
+
+    @classmethod
+    def _extractFirmware(self, val):
+        parts = self._splitByControlCharacters(val.decode('hex'))
+        if len(parts) > 0:
+            return parts[0]
+        else:
+            return None
+
+    @classmethod
+    def _extractModel(self, val):
+        parts = self._splitByControlCharacters(val.decode('hex'))
+        if len(parts) > 1:
+            return parts[1]
+        else:
+            return None
 
     def _statusURL(self, command):
         return 'http://{}/{}?t={}'.format(self._ip, command, self._password)
@@ -182,6 +220,14 @@ class GoPro:
                     '10': '240'
                 }
             }
+        },
+        'camera/cv': {
+            'firmware': {
+                'translate': '_extractFirmware'
+            },
+            'model': {
+                'translate': '_extractModel'
+            }
         }
     }
     commandMaxtrix = {
@@ -285,7 +331,10 @@ class GoPro:
                     # loop through different parts we know how to translate
                     for item in self.statusMatrix[cmd]:
                         args = self.statusMatrix[cmd][item]
-                        part = response[args['a']:args['b']]
+                        if 'a' in args and 'b' in args:
+                            part = response[args['a']:args['b']]
+                        else:
+                            part = response
 
                         # translate the response value if we know how
                         if 'translate' in args:
