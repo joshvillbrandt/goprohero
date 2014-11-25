@@ -2,11 +2,19 @@
 
 from setuptools import setup
 
+# auto-convert README.md
+try:
+    import pypandoc
+    long_description = pypandoc.convert('README.md', 'rst')
+except (ImportError, OSError):
+    # we'll just use the poorly formatted Markdown file instead
+    long_description = open('README.md').read()
+
 setup(
     name='gopro',
-    version='0.2.0-dev3',
+    version='0.2.0',
     description='A Python library for controlling GoPro cameras over http.',
-    long_description=open('README.md').read(),
+    long_description=long_description,
     url='https://github.com/joshvillbrandt/gopro',
     author='Josh Villbrandt',
     author_email='josh@javconcepts.com',
@@ -15,7 +23,8 @@ setup(
     setup_requires=[
         'tox',
         'nose',
-        'flake8'
+        'flake8',
+        'pypandoc'
     ],
     install_requires=[
         'Pillow',
