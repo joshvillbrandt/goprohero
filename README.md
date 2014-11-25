@@ -27,7 +27,10 @@ This project also produced the [wireless](https://github.com/joshvillbrandt/wire
 Install the `gopro` library and optional OpenCV library:
 
 ```bash
-sudo pip install gopro
+# sudo pip install gopro # working to put this into PyPI, but it isn't there yet...
+git clone https://github.com/joshvillbrandt/gopro
+cd gopro
+sudo python setup.py install
 ```
 
 To connect with a GoPro, you will need to have the camera on the local network. This can be accomplished by:
@@ -87,13 +90,13 @@ The `image()` function is currently disabled because of difficulties installing 
 
 This project uses [semantic versioning](http://semver.org/).
 
-### v0.2.0 - 2014/11/??
+### v0.2.0 - 2014/11/24
 
 * Renamed project from `GoProController` to `gopro`
 * Added support for HERO3+ and HERO4 cameras
-* Added to PyPI
-* Disabled the `image()` function
 * Now passes Flake8
+* Added testing with Travis CI
+* Refactored API - the names of most methods changed but the core functionality of the library remains the same
 
 ### v0.1.1 - 2014/02/17
 
@@ -105,6 +108,7 @@ This project uses [semantic versioning](http://semver.org/).
 
 ## Todo List
 
+* Add to PyPI
 * method to list photos and videos
 * method to download photos and videos
 * still some information in the status byte streams i haven't translated... I don't really need the rest though
