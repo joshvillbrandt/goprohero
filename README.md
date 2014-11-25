@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/joshvillbrandt/gopro.svg?branch=master)](https://travis-ci.org/joshvillbrandt/gopro)
+[![Build Status](https://travis-ci.org/joshvillbrandt/gopro.svg?branch=master)](https://travis-ci.org/joshvillbrandt/gopro) [![Documentation Status](https://readthedocs.org/projects/gopro/badge/?version=latest)](https://readthedocs.org/projects/gopro/?badge=latest)
 
 # gopro
 
@@ -92,7 +92,7 @@ This project uses [semantic versioning](http://semver.org/).
 
 ### v0.2.0 - 2014/11/24
 
-* Renamed project from `GoProController` to `gopro`
+* Renamed library from `GoProController` to `gopro`
 * Added support for HERO3+ and HERO4 cameras
 * Now passes Flake8
 * Added testing with Travis CI
