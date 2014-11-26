@@ -105,6 +105,14 @@ optional arguments:
   -h, --help  show this help message and exit
 ```
 
+For example, try:
+
+```bash
+goproctl gopro3-0 password power on
+```
+
+Other common commands are `power sleep`, `record on`, and `record off`.
+
 ## Change History
 
 This project uses [semantic versioning](http://semver.org/).
