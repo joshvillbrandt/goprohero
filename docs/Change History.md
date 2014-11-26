@@ -2,7 +2,7 @@
 
 This project uses [semantic versioning](http://semver.org/).
 
-## v0.2.2 - 2014/11/24
+## v0.2.2 - 2014/11/26
 
 * Renamed library from `gopro` to `goprohero`
 * Added to PyPI

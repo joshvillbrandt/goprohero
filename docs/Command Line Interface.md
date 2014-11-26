@@ -23,4 +23,4 @@ For example, try:
 goproctl gopro3-0 password power on
 ```
 
-Other common commands are `power sleep`, `record on`, and `record off`.
+Check out the [API](API.md) for the complete command list.

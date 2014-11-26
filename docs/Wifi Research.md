@@ -1,10 +1,16 @@
-# Infrastructure Wifi Research
+# Wifi Research
+
+## GoPro App Mode
+
+The `goprohero` library currently implements the ad-hoc wifi mode. Please view the source of the library for implementation details
+
+## GoPro Remote Mode
 
 This follow setup allows a Linux computer to appear as a GoPro remote to the GoPro cameras. To do this, we will set up an access point and DHCP server. In order to appear as a GoPro remote, the MAC address of the access point interface must use GoPro's OUI which is D8:96:85. So something like D8:96:85:00:00:00 will do. The access point SSID also must be in a special form - "HERO-RC-#####" where the hashes are the last 6 characters of the AP's mac address. From there, we use DHCP to hand the camera an IP, and then it is on our network!
 
 I used http://www.cyberciti.biz/faq/debian-ubuntu-linux-setting-wireless-access-point/ and http://ubuntuforums.org/showthread.php?t=1488953 to help me develop some of these snippits.
 
-## Wifi adapter
+### Wifi adapter
 
 You'll need a wifi adapter that can support master mode to set up an access point. I'm using a ALFA USB WiFi AWUS036NHA with the well-supported Atheros AR9271 chipset.
 
@@ -15,7 +21,7 @@ On that is installed, we need to change its mac address to one from the GoPro's 
     sudo ifconfig wlan0 up
     ifconfig
 
-## Set up access point
+### Set up access point
 
 Install the host AP deamon like so:
 
@@ -66,21 +72,11 @@ You can that start the DHCP server:
 
     sudo service isc-dhcp-server start
 
-## Install Scapy
+### Install Scapy
 
     sudo apt-get install python-scapy
 
-# Usage
-
-    sudo python remote.py
-
-
-
-
-
-
-
-
+### Info Dump
 
 sudo ifconfig wlan0 192.168.0.254 netmask 255.255.255.0
 

@@ -2,7 +2,7 @@
 
 First create a camera instance:
 
-* `camera = GoProHere([ip, password, loglevel])` - initialize a camera object
+* `camera = GoProHero([ip, password, loglevel])` - initialize a camera object
 
 Then, the follow methods are available on the camera instance:
 
@@ -10,10 +10,9 @@ Then, the follow methods are available on the camera instance:
 * `status()` - get status packets and translate them
 * `image()` - get an image and return it as a base64-encoded PNG string
 * `command(param, value)` - send one of the supported commands
-  * check the source for available commands - better documented list to come
 * `test(url)` - a simple testing interface to try out HTTP requests
 
-The following classmethods are also available:
+The following class methods are also available:
 
 * `@classmethod config()` - returns a dictionary with the current configuration
 
