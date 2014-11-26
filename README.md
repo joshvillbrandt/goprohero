@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/joshvillbrandt/gopro.svg?branch=master)](https://travis-ci.org/joshvillbrandt/gopro) [![Documentation Status](https://readthedocs.org/projects/gopro/badge/?version=latest)](http://gopro.readthedocs.org/en/latest/)
+[![Build Status](https://travis-ci.org/joshvillbrandt/goprohero.svg?branch=master)](https://travis-ci.org/joshvillbrandt/goprohero) [![Documentation Status](https://readthedocs.org/projects/goprohero/badge/?version=latest)](http://goprohero.readthedocs.org/en/latest/)
 
 # goprohero
 
