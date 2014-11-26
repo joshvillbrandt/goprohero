@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-# GoPro.py
+# GoProHero.py
 # Josh Villbrandt <josh@javconcepts.com>, Blair Gagnon <blairgagnon@gmail.com>
 # August 2013 - November 2014
 
@@ -25,12 +25,12 @@ except ImportError:
     pass
 
 
-class GoPro:
+class GoProHero:
     @classmethod
     def config(self):
         return {
-            'status': GoPro.statusMatrix,
-            'command': GoPro.commandMaxtrix
+            'status': GoProHero.statusMatrix,
+            'command': GoProHero.commandMaxtrix
         }
 
     @classmethod
@@ -359,7 +359,7 @@ class GoPro:
                             status[item] = part
                 except (HTTPError, URLError, socket.timeout) as e:
                     logging.warning('{}{} - error opening {}: {}{}'.format(
-                        Fore.YELLOW, 'GoPro.status()', url, e, Fore.RESET))
+                        Fore.YELLOW, 'GoProHero.status()', url, e, Fore.RESET))
                     camActive = False
 
         # build summary
@@ -370,7 +370,7 @@ class GoPro:
         elif 'power' in status and status['power'] == 'sleeping':
             status['summary'] = 'sleeping'
 
-        logging.info('GoPro.status() - result {}'.format(status))
+        logging.info('GoProHero.status() - result {}'.format(status))
         return status
 
     def image(self):
@@ -388,20 +388,20 @@ class GoPro:
                 str = output.getvalue()
                 output.close()
 
-                logging.info('GoPro.image() - success!')
+                logging.info('GoProHero.image() - success!')
                 return 'data:image/png;base64,'+base64.b64encode(str)
         except NameError:
             logging.warning('{}{} - OpenCV not installed{}'.format(
-                Fore.YELLOW, 'GoPro.image()', Fore.RESET))
+                Fore.YELLOW, 'GoProHero.image()', Fore.RESET))
         except IOError as e:
             logging.warning('{}{} - Pillow prereqs not installed: {}{}'.format(
-                Fore.YELLOW, 'GoPro.image()', e, Fore.RESET))
+                Fore.YELLOW, 'GoProHero.image()', e, Fore.RESET))
 
         # catchall return statement
         return False
 
     def command(self, command, value=None):
-        func_str = 'GoPro.command({}, {})'.format(command, value)
+        func_str = 'GoProHero.command({}, {})'.format(command, value)
 
         if command in self.commandMaxtrix:
             args = self.commandMaxtrix[command]

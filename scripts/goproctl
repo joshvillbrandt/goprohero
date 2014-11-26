@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 import argparse
-from gopro import GoPro
+from goprohero import GoProHero
 from wireless import Wireless
 
 # get command to change
@@ -18,7 +18,7 @@ parser.add_argument(
 args = parser.parse_args()
 
 # set up camera and network adapters
-camera = GoPro(password=args.password)
+camera = GoProHero(password=args.password)
 network = Wireless()
 
 # command the cameras

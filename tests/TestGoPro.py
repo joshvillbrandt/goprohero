@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import unittest
-from gopro import GoPro
+from goprohero import GoProHero
 
 
 class TestGoPro(unittest.TestCase):
@@ -11,5 +11,5 @@ class TestGoPro(unittest.TestCase):
 
     def test_camera_init(self):
         # initialize a camera object
-        camera = GoPro('password')
+        camera = GoProHero('password')
         self.assertTrue(camera is not None)

@@ -11,15 +11,15 @@ except (ImportError, OSError):
     long_description = open('README.md').read()
 
 setup(
-    name='gopro',
-    version='0.2.1',
+    name='goprohero',
+    version='0.2.2',
     description='A Python library for controlling GoPro cameras over http.',
     long_description=long_description,
     url='https://github.com/joshvillbrandt/gopro',
     author='Josh Villbrandt',
     author_email='josh@javconcepts.com',
     license=open('LICENSE').read(),
-    packages=['gopro'],
+    packages=['goprohero'],
     setup_requires=[
         'tox',
         'nose',

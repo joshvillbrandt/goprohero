@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/joshvillbrandt/gopro.svg?branch=master)](https://travis-ci.org/joshvillbrandt/gopro) [![Documentation Status](https://readthedocs.org/projects/gopro/badge/?version=latest)](http://gopro.readthedocs.org/en/latest/)
 
-# gopro
+# goprohero
 
 A Python library for controlling GoPro cameras over http.
 
@@ -24,13 +24,10 @@ This project also produced the [wireless](https://github.com/joshvillbrandt/wire
 
 ## Setup
 
-Install the `gopro` library and optional OpenCV library:
+Install the `goprohero` library and optional OpenCV library:
 
 ```bash
-# sudo pip install gopro # working to put this into PyPI, but it isn't there yet...
-git clone https://github.com/joshvillbrandt/gopro
-cd gopro
-sudo python setup.py install
+sudo pip install goprohero
 ```
 
 To connect with a GoPro, you will need to have the camera on the local network. This can be accomplished by:
@@ -38,7 +35,7 @@ To connect with a GoPro, you will need to have the camera on the local network. 
 1. Turning on the GoPro wireless "app" mode - this instructs the camera to create an AdHoc wireless network
 1. Connecting the computer running this library to the camera's network
 
-This connection process can be automated with the [GoProController](https://github.com/joshvillbrandt/GoProController). Once connect
+This connection process can be automated with the [GoProController](https://github.com/joshvillbrandt/GoProController) or with the included command line interface.
 
 ### Live Stream Image Capture
 
@@ -67,8 +64,8 @@ sudo ln -s /usr/local/Cellar/opencv/2.4.9/lib/python2.7/site-packages/cv2.so /Li
 A typical usage looks like this:
 
 ```python
-from gopro import GoPro
-camera = GoPro(password='password')
+from goprohero import GoProHero
+camera = GoProHero(password='password')
 camera.command('record', 'on')
 status = camera.status()
 ```
@@ -117,6 +114,12 @@ Other common commands are `power sleep`, `record on`, and `record off`.
 
 This project uses [semantic versioning](http://semver.org/).
 
+### v0.2.2 - 2014/11/24
+
+* Renamed library from `gopro` to `goprohero`
+* Added to PyPI
+* Started better documentation
+
 ### v0.2.1 - 2014/11/24
 
 * Added `goproctl` script
@@ -139,7 +142,6 @@ This project uses [semantic versioning](http://semver.org/).
 
 ## Todo List
 
-* Add to PyPI
 * method to list photos and videos
 * method to download photos and videos
 * still some information in the status byte streams i haven't translated... I don't really need the rest though
