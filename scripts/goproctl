@@ -25,5 +25,6 @@ network = Wireless()
 for ssid in args.ssid:
     print('For {}, setting {} = {}'.format(
         ssid, args.param, args.value))
-    network.connect(ssid=ssid, password=args.password)
+    if network.current() != ssid:
+        network.connect(ssid=ssid, password=args.password)
     camera.command(args.param, args.value)

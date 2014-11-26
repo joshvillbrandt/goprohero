@@ -2,6 +2,10 @@
 
 This project uses [semantic versioning](http://semver.org/).
 
+## v0.2.3 - future
+
+* `goproctl` won't try to reconnect to a new wifi network if it is already on the desired network
+
 ## v0.2.2 - 2014/11/26
 
 * Renamed library from `gopro` to `goprohero`
