@@ -73,7 +73,7 @@ status = camera.status()
 * method to list photos and videos
 * method to download photos and videos
 * still some information in the status byte streams i haven't translated... I don't really need the rest though
-* openCV functions can get a segfault if the wifi connection is spotty - that sucks
+* add more commands
 
 ## Contributions
 

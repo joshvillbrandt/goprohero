@@ -308,7 +308,8 @@ class GoProHero:
         }
     }
 
-    def __init__(self, ip='10.5.5.9', password='pass', log_level=logging.INFO):
+    def __init__(
+            self, ip='10.5.5.9', password='password', log_level=logging.INFO):
         self._ip = ip
         self._password = password
 
