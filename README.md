@@ -86,9 +86,32 @@ status = camera.status()
 
 The `image()` function is currently disabled because of difficulties installing OpenCV across platforms and because the OpenCV network functions seg fault when the wifi link is spotty.
 
+## Command Line Interface
+
+A command line interface for controlling GoPro cameras is also made available. This interface utilizes the [wireless](https://github.com/joshvillbrandt/wireless) library to automatically jump between networks.
+
+```bash
+usage: goproctl [-h] ssid [ssid ...] password param value
+
+A command line interface for passing commands to one or more GoPros.
+
+positional arguments:
+  ssid        ssid of the gopro to control
+  password    the password for the gopro(s)
+  param       the parameter to be changed
+  value       the value to set the parameter to
+
+optional arguments:
+  -h, --help  show this help message and exit
+```
+
 ## Change History
 
 This project uses [semantic versioning](http://semver.org/).
+
+### v0.2.1 - 2014/11/24
+
+* Added `goproctl` script
 
 ### v0.2.0 - 2014/11/24
 

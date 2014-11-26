@@ -12,7 +12,7 @@ except (ImportError, OSError):
 
 setup(
     name='gopro',
-    version='0.2.0',
+    version='0.2.1',
     description='A Python library for controlling GoPro cameras over http.',
     long_description=long_description,
     url='https://github.com/joshvillbrandt/gopro',
@@ -28,9 +28,10 @@ setup(
     ],
     install_requires=[
         'Pillow',
+        'wireless',
         'colorama'
     ],
-    scripts=[],
+    scripts=['scripts/goproctl'],
     test_suite='tests',
     zip_safe=False
 )

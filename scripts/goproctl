@@ -1,0 +1,29 @@
+#!/usr/bin/python
+
+import argparse
+from gopro import GoPro
+from wireless import Wireless
+
+# get command to change
+parser = argparse.ArgumentParser(description=(
+    'A command line interface for passing commands to one or more GoPros.'))
+parser.add_argument(
+    'ssid', nargs='+', help='ssid of the gopro to control')
+parser.add_argument(
+    'password', help='the password for the gopro(s)')
+parser.add_argument(
+    'param', help='the parameter to be changed')
+parser.add_argument(
+    'value', help='the value to set the parameter to')
+args = parser.parse_args()
+
+# set up camera and network adapters
+camera = GoPro(password=args.password)
+network = Wireless()
+
+# command the cameras
+for ssid in args.ssid:
+    print('For {}, setting {} = {}'.format(
+        ssid, args.param, args.value))
+    network.connect(ssid=ssid, password=args.password)
+    camera.command(args.param, args.value)
