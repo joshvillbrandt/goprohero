@@ -1,7 +1,6 @@
+# Infrastructure Wifi Research
 
-# Setup
-
-This follow setup allows a linux computer to appear as a GoPro remote to the GoPro cameras. To do this, we will set up an access point and DHCP server. In order to appear as a GoPro remote, the MAC address of the access point interface must use GoPro's OUI which is D8:96:85. So something like D8:96:85:00:00:00 will do. The access point SSID also must be in a special form - "HERO-RC-#####" where the hashes are the last 6 characters of the AP's mac address. From there, we use DHCP to hand the camera an IP, and then it is on our network!
+This follow setup allows a Linux computer to appear as a GoPro remote to the GoPro cameras. To do this, we will set up an access point and DHCP server. In order to appear as a GoPro remote, the MAC address of the access point interface must use GoPro's OUI which is D8:96:85. So something like D8:96:85:00:00:00 will do. The access point SSID also must be in a special form - "HERO-RC-#####" where the hashes are the last 6 characters of the AP's mac address. From there, we use DHCP to hand the camera an IP, and then it is on our network!
 
 I used http://www.cyberciti.biz/faq/debian-ubuntu-linux-setting-wireless-access-point/ and http://ubuntuforums.org/showthread.php?t=1488953 to help me develop some of these snippits.
 
@@ -58,7 +57,7 @@ Set up the DHCP config file '/etc/dhcp/dhcpd.conf'. Mine looks like this:
     option routers 192.168.1.254;
     option domain-name-servers 192.168.1.1, 192.168.1.2;
     option domain-name "mydomain.example";
-    
+
     subnet 192.168.1.0 netmask 255.255.255.0 {
     range 192.168.1.10 192.168.1.200;
     }
