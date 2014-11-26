@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/joshvillbrandt/goprohero.svg?branch=master)](https://travis-ci.org/joshvillbrandt/goprohero) [![Documentation Status](https://readthedocs.org/projects/goprohero/badge/?version=latest)](http://goprohero.readthedocs.org/en/latest/)
+
 # goprohero
 
 A Python library for controlling GoPro cameras over http.
