@@ -21,7 +21,7 @@ The following class methods are also available:
 These commands are used for both `camera.command()` and the `goproctl` command line interface.
 
 Parameter | Values
---- | ---
+--- |:---
 power | `sleep`, `on`
 record | `off`, `on`
 preview | `off`, `on`
