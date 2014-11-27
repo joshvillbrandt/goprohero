@@ -1,5 +1,6 @@
 #!/usr/bin/python
 
+import json
 import argparse
 from goprohero import GoProHero
 from wireless import Wireless
@@ -12,9 +13,9 @@ parser.add_argument(
 parser.add_argument(
     'password', help='the password for the gopro(s)')
 parser.add_argument(
-    'param', help='the parameter to be changed')
+    'param', help='the parameter to be changed or "status" for status')
 parser.add_argument(
-    'value', help='the value to set the parameter to')
+    'value', nargs='?', default=None, help='the value to set the parameter to')
 args = parser.parse_args()
 
 # set up camera and network adapters
@@ -23,8 +24,19 @@ network = Wireless()
 
 # command the cameras
 for ssid in args.ssid:
-    print('For {}, setting {} = {}'.format(
-        ssid, args.param, args.value))
+    if args.param == 'status':
+        print('For {}, getting status'.format(
+            ssid, args.param, args.value))
+    else:
+        print('For {}, setting {} = {}'.format(
+            ssid, args.param, args.value))
+
+    # jump to a new network if needed
     if network.current() != ssid:
         network.connect(ssid=ssid, password=args.password)
-    camera.command(args.param, args.value)
+
+    # get status or send command
+    if args.param == 'status':
+        print(json.dumps(camera.status(), indent=2, sort_keys=False))
+    else:
+        camera.command(args.param, args.value)

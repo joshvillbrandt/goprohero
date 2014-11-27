@@ -2,19 +2,20 @@
 
 This project uses [semantic versioning](http://semver.org/).
 
-## v0.2.3 - future
+## v0.2.3 - 2014/11/27
 
-* `goproctl` won't try to reconnect to a new wifi network if it is already on the desired network
+* `goproctl` uses the existing network connection if possible
+* `goproctl` can now get the status of cameras
 
 ## v0.2.2 - 2014/11/26
 
 * Renamed library from `gopro` to `goprohero`
 * Added to PyPI
-* Started better documentation
+* Started better documentation with readthedocss support
 
 ## v0.2.1 - 2014/11/24
 
-* Added `goproctl` script
+* Added `goproctl` command line interface
 
 ## v0.2.0 - 2014/11/24
 

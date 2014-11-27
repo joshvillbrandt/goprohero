@@ -34,3 +34,5 @@ brew install opencv
 sudo ln -s /usr/local/Cellar/opencv/2.4.9/lib/python2.7/site-packages/cv.py /Library/Python/2.7/site-packages/cv.py
 sudo ln -s /usr/local/Cellar/opencv/2.4.9/lib/python2.7/site-packages/cv2.so /Library/Python/2.7/site-packages/cv2.so
 ```
+
+Note that having the camera's `preview` setting set to `on` might be required for the live stream image capture.

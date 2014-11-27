@@ -12,7 +12,7 @@ except (ImportError, OSError):
 
 setup(
     name='goprohero',
-    version='0.2.2',
+    version='0.2.3',
     description='A Python library for controlling GoPro cameras over http.',
     long_description=long_description,
     url='https://github.com/joshvillbrandt/gopro',
