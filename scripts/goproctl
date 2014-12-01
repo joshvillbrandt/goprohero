@@ -15,7 +15,7 @@ parser.add_argument(
 parser.add_argument(
     'param', help='the parameter to be changed or "status" for status')
 parser.add_argument(
-    'value', nargs='?', default=None, help='the value to set the parameter to')
+    'value', help='the value to set the parameter to')
 args = parser.parse_args()
 
 # set up camera and network adapters
