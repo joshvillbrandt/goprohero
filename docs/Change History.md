@@ -2,6 +2,11 @@
 
 This project uses [semantic versioning](http://semver.org/).
 
+## v0.2.4 - 2014/12/01
+
+* Removed dependency on `pandoc`
+* Added publishing instructions
+
 ## v0.2.3 - 2014/11/27
 
 * `goproctl` uses the existing network connection if possible

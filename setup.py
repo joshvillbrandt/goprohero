@@ -12,7 +12,7 @@ except (ImportError, OSError):
 
 setup(
     name='goprohero',
-    version='0.2.3',
+    version='0.2.4',
     description='A Python library for controlling GoPro cameras over http.',
     long_description=long_description,
     url='https://github.com/joshvillbrandt/gopro',
@@ -23,8 +23,7 @@ setup(
     setup_requires=[
         'tox',
         'nose',
-        'flake8',
-        'pypandoc'
+        'flake8'
     ],
     install_requires=[
         'Pillow',
