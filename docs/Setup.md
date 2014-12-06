@@ -20,10 +20,9 @@ Some additional setup is required to capture a snapshot of the camera's live str
 In Ubuntu 14.04, you'll need to install opencv and the [prereqs for Pillow](http://pillow.readthedocs.org/installation.html#linux-installation):
 
 ```bash
-sudo apt-get install python-opencv
-sudo apt-get install libtiff5-dev libjpeg8-dev zlib1g-dev libfreetype6-dev liblcms2-dev libwebp-dev tcl8.6-dev tk8.6-dev python-tk
+sudo apt-get install -y python-opencv
+sudo apt-get install -y libtiff5-dev libjpeg8-dev zlib1g-dev libfreetype6-dev liblcms2-dev libwebp-dev tcl8.6-dev tk8.6-dev python-tk
 sudo pip uninstall Pillow; sudo pip install Pillow
-sudo
 ```
 
 For Mac, follow [this guide](https://jjyap.wordpress.com/2014/05/24/installing-opencv-2-4-9-on-mac-osx-with-python-support/) for install opencv with Homebrew. For me, this boiled down to:
