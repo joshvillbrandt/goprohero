@@ -4,7 +4,11 @@ This project uses [semantic versioning](http://semver.org/).
 
 ## v0.2.6 - future
 
-* Made arguments to `goproctl` keyword arguments and added the `interface` argument
+* TODO: Made arguments to `goproctl` keyword arguments and added the `interface` argument
+* Fixed commanding for commands without values like `delete_all` and `delete_last`
+* Added `defaultmode`, `minselapsed`, `spotmeter`, `autooff`, `lowlight`, `looping`, and `attachment` parameters
+* Fixed erroneous `secselapsed` and `record` parameter
+* Renamed `mem` parameter to `picsremaining`
 * Added a list of supported status parameters to the docs API page
 * Added GoPro firmware upgrade instructions to the docs
 

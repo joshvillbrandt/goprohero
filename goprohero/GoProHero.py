@@ -88,8 +88,12 @@ class GoProHero:
         return 'http://{}/{}?t={}'.format(self._ip, command, self._password)
 
     def _commandURL(self, command, value):
-        return 'http://{}/{}?t={}&p=%{}'.format(self._ip, command,
-                                                self._password, value)
+        if value is not None:
+            return 'http://{}/{}?t={}&p=%{}'.format(
+                self._ip, command, self._password, value)
+        else:
+            return 'http://{}/{}?t={}'.format(
+                self._ip, command, self._password)
 
     def _previewURL(self):
         return 'http://{}:8080/live/amba.m3u8'.format(self._ip)
@@ -121,8 +125,41 @@ class GoProHero:
                     '00': 'video',
                     '01': 'still',
                     '02': 'burst',
-                    '03': 'timer',
+                    '03': 'timelapse',
                     '07': 'settings'
+                }
+            },
+            'defaultmode': {
+                'a': 6,
+                'b': 8,
+                'translate': {
+                    '00': 'video',
+                    '01': 'still',
+                    '02': 'burst',
+                    '03': 'timelapse'
+                }
+            },
+            'spotmeter': {
+                'a': 8,
+                'b': 10,
+                'translate': {
+                    '00': 'off',
+                    '01': 'on'
+                }
+            },
+            'timelapseinterval': {
+                'a': 10,
+                'b': 12,
+                'translate': '_hexToDec'
+            },
+            'autooff': {
+                'a': 12,
+                'b': 14,
+                'translate': {
+                    '00': 'never',
+                    '01': '1 minute',
+                    '02': '2 minutes',
+                    '03': '5 minutes'
                 }
             },
             'fov': {
@@ -144,8 +181,13 @@ class GoProHero:
                     '5': '12MP wide'
                 }
             },
-            'secselapsed': {
+            'minselapsed': {
                 'a': 26,
+                'b': 28,
+                'translate': '_hexToDec'
+            },
+            'secselapsed': {
+                'a': 28,
                 'b': 30,
                 'translate': '_hexToDec'
             },
@@ -165,7 +207,7 @@ class GoProHero:
                     '4': 'yes'
                 }
             },
-            'mem': {  # i really have no idea what this is
+            'picsremaining': {  # i really have no idea what this is
                 'a': 42,
                 'b': 46,
                 'translate': '_hexToDec'
@@ -186,17 +228,46 @@ class GoProHero:
                 'translate': '_hexToDec'
             },
             'record': {
-                'a': 60,
-                'b': 62,
+                'a': 58,
+                'b': 60,
                 'translate': {
-                    '05': 'on',
-                    '04': 'off'
+                    '00': 'off',
+                    '01': 'on'
+                }
+            },
+            'lowlight': {
+                'a': 60,
+                'b': 61,
+                'translate': {
+                    '0': 'off',
+                    '4': 'on'
+                }
+            },
+            'looping': {
+                'a': 74,
+                'b': 76,
+                'translate': {
+                    '00': 'off',
+                    '01': '5 minutes',
+                    '02': '20 minutes',
+                    '03': '60 minutes',
+                    '04': '120 minutes',
+                    '05': 'max'
                 }
             },
             'batt2': {
                 'a': 90,
                 'b': 92,
                 'translate': '_hexToDec'
+            },
+            'attachment': {
+                'a': 92,
+                'b': 94,
+                'translate': {
+                    '00': 'none',
+                    '04': 'LCD',
+                    '08': 'battery'
+                }
             },
             'vidres': {
                 'a': 100,
@@ -208,9 +279,9 @@ class GoProHero:
                     '03': '1080p',
                     '04': '1440p',
                     '05': '2.7K',
-                    '06': '2.7KCin',
+                    '06': '2.7K 17:9 Cinema',
                     '07': '4K',
-                    '08': '4KCin',
+                    '08': '4K 17:9 Cinema',
                     '09': '1080p SuperView',
                     '10': '720p SuperView'
                 }
@@ -406,8 +477,13 @@ class GoProHero:
 
         if command in self.commandMaxtrix:
             args = self.commandMaxtrix[command]
+            # accept both None and '' for commands without a value
+            if value == '':
+                value = None
+            # for commands with values, translate the value
             if value is not None and value in args['translate']:
                 value = args['translate'][value]
+            # build the final url
             url = self._commandURL(args['cmd'], value)
 
             # attempt to contact the camera

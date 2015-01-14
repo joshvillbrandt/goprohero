@@ -32,4 +32,4 @@ locate | `off`, `on`
 
 ## Status
 
-The following status parameters are interpreted from the GoPro status endpoints: `power`, `batt1`, `batt2`, `mode`, `fov`, `picres`, `secelapsed`, `orientation`, `charging`, `mem`, `npics`, `minsremaining`, `nvids`, `record`, `vidres`, `fps`, `name`, `model`, and `firmware`. View the source file for a complete list of possible values for each status parameter.
+The following status parameters are interpreted from the GoPro status endpoints: `power`, `batt1`, `batt2`, `mode`, `defaultmode`, `spotmeter`, `autooff`, `fov`, `picres`, `minselapsed`, `secselapsed`, `orientation`, `charging`, `picsremaining`, `npics`, `minsremaining`, `nvids`, `record`, `vidres`, `fps`, `lowlight`, `looping`, `attachment`, `name`, `model`, and `firmware`. View the source file for a complete list of possible values for each status parameter.
