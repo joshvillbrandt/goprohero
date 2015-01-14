@@ -5,7 +5,7 @@ import argparse
 from goprohero import GoProHero
 from wireless import Wireless
 
-# get command to change
+# get command line arguments
 parser = argparse.ArgumentParser(description=(
     'A command line interface for passing commands to one or more GoPros.'))
 parser.add_argument(
@@ -20,7 +20,7 @@ args = parser.parse_args()
 
 # set up camera and network adapters
 camera = GoProHero(password=args.password)
-network = Wireless()
+network = Wireless(args.interface)
 
 # command the cameras
 for ssid in args.ssid:

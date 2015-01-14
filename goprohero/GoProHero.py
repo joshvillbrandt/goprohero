@@ -111,6 +111,14 @@ class GoProHero:
             }
         },
         'camera/se': {
+            'preview': {
+                'a': 37,
+                'b': 38,
+                'translate': {
+                    '0': 'off',
+                    '1': 'on'
+                }
+            },
             'batt1': {
                 'a': 38,
                 'b': 40,
@@ -195,6 +203,7 @@ class GoProHero:
                 'a': 37,
                 'b': 38,
                 'translate': {
+                    # looks like this really should just be the third bit
                     '0': 'up',
                     '4': 'down'
                 }
@@ -203,11 +212,12 @@ class GoProHero:
                 'a': 39,
                 'b': 40,
                 'translate': {
+                    '2': 'no',  # 2 only shows up temporarily
                     '3': 'no',
                     '4': 'yes'
                 }
             },
-            'picsremaining': {  # i really have no idea what this is
+            'picsremaining': {
                 'a': 42,
                 'b': 46,
                 'translate': '_hexToDec'
@@ -243,6 +253,27 @@ class GoProHero:
                     '4': 'on'
                 }
             },
+            'protune': {
+                'a': 61,
+                'b': 62,
+                'translate': {
+                    '0': 'off',  # seems to be only while in the menu
+                    '2': 'on',  # seems to be only while in the menu
+                    '4': 'off',
+                    '6': 'on'
+                }
+            },
+            'whitebalance': {
+                'a': 69,
+                'b': 70,
+                'translate': {
+                    '0': 'auto',
+                    '1': '3000K',
+                    '2': '5500K',
+                    '3': '6500K',
+                    '4': 'raw'
+                }
+            },
             'looping': {
                 'a': 74,
                 'b': 76,
@@ -260,13 +291,21 @@ class GoProHero:
                 'b': 92,
                 'translate': '_hexToDec'
             },
-            'attachment': {
+            'overheated': {  # experimental
                 'a': 92,
+                'b': 93,
+                'translate': {
+                    '0': 'false',
+                    '4': 'true'
+                }
+            },
+            'attachment': {
+                'a': 93,
                 'b': 94,
                 'translate': {
-                    '00': 'none',
-                    '04': 'LCD',
-                    '08': 'battery'
+                    '0': 'none',
+                    '4': 'LCD',
+                    '8': 'battery'
                 }
             },
             'vidres': {
@@ -283,7 +322,7 @@ class GoProHero:
                     '07': '4K',
                     '08': '4K 17:9 Cinema',
                     '09': '1080p SuperView',
-                    '10': '720p SuperView'
+                    '0a': '720p SuperView'
                 }
             },
             'fps': {
@@ -300,7 +339,7 @@ class GoProHero:
                     '07': '60',
                     '08': '100',
                     '09': '120',
-                    '10': '240'
+                    '0a': '240'
                 }
             }
         },
@@ -353,7 +392,7 @@ class GoProHero:
                 'burst': '02',
                 'timelapse': '03',
                 'timer': '04',
-                'hdmi': '05'
+                'hdmiout': '05'
             }
         },
         'volume': {
@@ -366,6 +405,77 @@ class GoProHero:
         },
         'locate': {
             'cmd': 'camera/LL',
+            'translate': {
+                'off': '00',
+                'on': '01'
+            }
+        },
+        'picres': {
+            'cmd': 'camera/PR',
+            'translate': {
+                '11MP wide': '00',
+                '8MP med': '01',
+                '5MP wide': '02',
+                '5MP med': '03',
+                '7MP wide': '04',
+                '12MP wide': '05',
+                '7MP med': '06'
+            }
+        },
+        'vidres': {
+            'cmd': 'camera/VV',
+            'translate': {
+                'WVGA': '00',
+                '720p': '01',
+                '960p': '02',
+                '1080p': '03',
+                '1440p': '04',
+                '2.7K': '05',
+                '2.7K 17:9 Cinema': '06',
+                '4K': '07',
+                '4K 17:9 Cinema': '08',
+                '1080p SuperView': '09',
+                '720p SuperView': '0a'
+            }
+        },
+        'fov': {
+            'cmd': 'camera/FV',
+            'translate': {
+                '170': '00',
+                '127': '01',
+                '90': '02'
+            }
+        },
+        'fps': {
+            'cmd': 'camera/FS',
+            'translate': {
+                '12': '00',
+                '12.5': '0b',
+                '15': '01',
+                '24': '02',
+                '25': '03',
+                '30': '04',
+                '48': '05',
+                '50': '06',
+                '60': '07',
+                '100': '08',
+                '120': '09',
+                '240': '0a'
+            }
+        },
+        'looping': {
+            'cmd': 'camera/LO',
+            'translate': {
+                'off': '00',
+                '5 minutes': '01',
+                '20 minutes': '02',
+                '60 minutes': '03',
+                '120 minutes': '04',
+                'max': '05'
+            }
+        },
+        'protune': {
+            'cmd': 'camera/PT',
             'translate': {
                 'off': '00',
                 'on': '01'
