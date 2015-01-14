@@ -9,5 +9,6 @@ pages:
 - ['Setup.md', 'User Guide', 'Setup']
 - ['API.md', 'API']
 - ['Command Line Interface.md', 'Command Line Interface']
+- ['GoPro Firmware Instructions.md', 'GoPro Firmware Instructions']
 - ['Wifi Research.md', 'Wifi Research']
 - ['Change History.md', 'Change History']

@@ -2,6 +2,12 @@
 
 This project uses [semantic versioning](http://semver.org/).
 
+## v0.2.6 - future
+
+* Made arguments to `goproctl` keyword arguments and added the `interface` argument
+* Added a list of supported status parameters to the docs API page
+* Added GoPro firmware upgrade instructions to the docs
+
 ## v0.2.5 - 2014/12/01
 
 * Fixed bug that prevent `goproctl` from working
