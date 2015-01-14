@@ -2,10 +2,14 @@
 
 This project uses [semantic versioning](http://semver.org/).
 
-## v0.2.6 - future
+## v0.2.7 - future
 
 * TODO: Made arguments to `goproctl` keyword arguments and added the `interface` argument
+
+## v0.2.6 - 2014/12/14
+
 * Fixed commanding for commands without values like `delete_all` and `delete_last`
+* Added `picres`, `vidres`, `fov`, `fps`, `looping`, `protune`, `delete_last`, and `delete_all` commands
 * Added `defaultmode`, `minselapsed`, `spotmeter`, `autooff`, `lowlight`, `looping`, and `attachment` parameters
 * Fixed erroneous `secselapsed` and `record` parameter
 * Renamed `mem` parameter to `picsremaining`

@@ -29,6 +29,14 @@ orientation | `up`, `down`
 mode | `video`, `still`, `burst`, `timelapse`, `timer`, `hdmi`
 volume | `0`, `70`, `100`
 locate | `off`, `on`
+picres | `5MP wide`, `5MP med`, `7MP med`, `7MP wide`, `8MP med`, `11MP wide`, `12MP wide`
+vidres | `WVGA`, `720p`, `960p`, `1080p`, `1440p`, `2.7K`, `2.7K 17:9 Cinema`, `4K`, `4K 17:9 Cinema`, `1080p SuperView`, `720p SuperView`
+fov | `170`, `127`, `90`
+fps | `12`, `12.5`, `15`, `24`, `25`, `30`, `48`, `50`, `60`, `100`, `120`, `240`
+looping | `off`, `5 minutes`, `20 minutes`, `60 minutes`, `120 minutes`, `max`
+protune | `off`, `on`
+delete_last | n/a
+delete_all | n/a
 
 ## Status
 
