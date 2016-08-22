@@ -16,6 +16,8 @@ parser.add_argument(
     'param', help='the parameter to be changed or "status" for status')
 parser.add_argument(
     'value', help='the value to set the parameter to')
+parser.add_argument(
+    '--interface', help='the wifi interface to use', required=False)
 args = parser.parse_args()
 
 # set up camera and network adapters
