@@ -1,5 +1,3 @@
-#!/usr/bin/python
-
 # GoProHero.py
 # Josh Villbrandt <josh@javconcepts.com>, Blair Gagnon <blairgagnon@gmail.com>
 # August 2013 - November 2014
@@ -555,11 +553,31 @@ class GoProHero:
         logging.info('GoProHero.status() - result {}'.format(status))
         return status
 
+    def np_image(self):
+        """Grab the latest preview image from the Hero as a numpy array
+
+        Returns
+        -------
+        status, img: A tuple whose first value is a boolean indicating the
+                     success or failure of the call. If `status` is True, `img`
+                     will contain the preview frame as a numpy array. If
+                     `status` is False, the image frame should be ignored and
+                     untrusted.
+        """
+        try:
+            stream = cv2.VideoCapture(self._previewURL())
+            return stream.read()
+
+        except NameError:
+            logging.warning('{}{} - OpenCV not installed{}'.format(
+                Fore.YELLOW, 'GoProHero.image()', Fore.RESET))
+
+        # catch all return
+        return False, None
+
     def image(self):
         try:
-            # use OpenCV to capture a frame and store it in a numpy array
-            stream = cv2.VideoCapture(self._previewURL())
-            success, numpyImage = stream.read()
+            success, numpyImage = self.np_image()
 
             if success:
                 # use Image to save the image to a file, but actually save it
@@ -572,9 +590,7 @@ class GoProHero:
 
                 logging.info('GoProHero.image() - success!')
                 return 'data:image/png;base64,'+base64.b64encode(str)
-        except NameError:
-            logging.warning('{}{} - OpenCV not installed{}'.format(
-                Fore.YELLOW, 'GoProHero.image()', Fore.RESET))
+
         except IOError as e:
             logging.warning('{}{} - Pillow prereqs not installed: {}{}'.format(
                 Fore.YELLOW, 'GoProHero.image()', e, Fore.RESET))
